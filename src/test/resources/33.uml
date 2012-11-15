@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_8T5qwJT6EeGlkdx10O5w5w" name="MyPackage">
+  <packagedElement xmi:type="uml:Class" xmi:id="_8T5qwZT6EeGlkdx10O5w5w" name="Parent">
+    <ownedAttribute xmi:id="_8T5qwpT6EeGlkdx10O5w5w" name="users" type="_4-bqUZUnEeGFL6eAOhUmfA"/>
+    <ownedOperation xmi:id="_MU36kJUoEeGFL6eAOhUmfA" name="getUsers">
+      <ownedParameter xmi:id="_QPpuEJUoEeGFL6eAOhUmfA" type="_4-bqUZUnEeGFL6eAOhUmfA" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_hobeIJUwEeGFL6eAOhUmfA" name="setUsers">
+      <ownedParameter xmi:id="_lMkTQJUwEeGFL6eAOhUmfA" name="users" type="_4-bqUZUnEeGFL6eAOhUmfA"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_EAmXQJUoEeGFL6eAOhUmfA" name="java">
+    <packagedElement xmi:type="uml:Package" xmi:id="_FvT70JUoEeGFL6eAOhUmfA" name="util">
+      <packagedElement xmi:type="uml:Class" xmi:id="_4-bqUZUnEeGFL6eAOhUmfA" name="List"/>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_uscmEZWIEeGTxJ0BRfQfNw" name="Child">
+    <generalization xmi:id="_0lJe0JWIEeGTxJ0BRfQfNw" general="_8T5qwZT6EeGlkdx10O5w5w"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_a8kokJmuEeG4Df8tqwhC-g" name="Chidl2">
+    <generalization xmi:id="_cjY1YJmuEeG4Df8tqwhC-g" general="_8T5qwZT6EeGlkdx10O5w5w"/>
+  </packagedElement>
+</uml:Package>
