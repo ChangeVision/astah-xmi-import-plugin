@@ -1,51 +1,32 @@
 package com.change_vision.astah.xmi.convert;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.Constraint;
-import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.Enumeration;
-import org.eclipse.uml2.uml.EnumerationLiteral;
-import org.eclipse.uml2.uml.MultiplicityElement;
-import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.Parameter;
-import org.eclipse.uml2.uml.ParameterDirectionKind;
-import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Profile;
-import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Relationship;
 import org.eclipse.uml2.uml.TemplateBinding;
-import org.eclipse.uml2.uml.Type;
-import org.eclipse.uml2.uml.TypedElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.jude.api.inf.editor.BasicModelEditor;
-import com.change_vision.jude.api.inf.editor.ModelEditorFactory;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.LicenseNotFoundException;
 import com.change_vision.jude.api.inf.exception.ProjectLockedException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
-import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
-import com.change_vision.jude.api.inf.model.IOperation;
-import com.change_vision.jude.api.inf.model.IParameter;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 import com.change_vision.jude.api.inf.project.ProjectAccessorFactory;
 
@@ -135,79 +116,12 @@ public class XmiToAstah {
 
 	private void convertFeatures() throws ClassNotFoundException,
 			InvalidEditingException, ProjectNotFoundException {
-		BasicModelEditor bme = ModelEditorFactory.getBasicModelEditor();
+		FeatureConverter converter = new FeatureConverter(converteds,apiUtil);
 		// create attributes and operations
 		for (Element e : converteds.keySet().toArray(new Element[0])) {
 			if (e instanceof Classifier && converteds.get(e) instanceof IClass) {
 				Classifier cls = (Classifier) e;
-				IClass astahClass = (IClass) converteds.get(cls);
-				
-				if (cls instanceof Enumeration) {
-					for (EnumerationLiteral literal : ((Enumeration) cls)
-							.getOwnedLiterals()) {
-						IAttribute astahAttribute = bme.createAttribute(
-								astahClass, literal.getName(), astahClass);
-						converteds.put(literal, astahAttribute);
-					}
-				}
-				for (Property prop : cls.getAttributes()) {
-					if (prop.getAssociation() == null) {
-						IAttribute astahAttribute = bme.createAttribute(
-								astahClass, prop.getName(), "int");
-						try {
-							astahAttribute
-									.setQualifiedTypeExpression(getQualifiedTypeExpression(prop));
-						} catch (InvalidEditingException ex) {
-							//do nothing, just use default type "int" when failed.
-						}
-						astahAttribute.setStatic(prop.isStatic());
-						astahAttribute.setChangeable(prop.isReadOnly());
-						if (prop.isComposite()) {
-							astahAttribute.setComposite();
-						} else if (prop.getAggregation().equals(
-								AggregationKind.SHARED)) {
-							astahAttribute.setAggregation();
-						}
-						astahAttribute.setDerived(prop.isDerived());
-						astahAttribute.setInitialValue(prop.getDefault());
-						converteds.put(prop, astahAttribute);
-					}
-				}
-				for (Operation op : cls.getOperations()) {
-					IOperation astahOperation = bme.createOperation(astahClass,
-							op.getName(), "void");
-					astahOperation.setStatic(op.isStatic());
-					astahOperation.setAbstract(op.isAbstract());
-					for (Constraint c : op.getPreconditions()) {
-						astahOperation.addPreCondition(c.getName());
-					}
-					for (Constraint c : op.getPostconditions()) {
-						astahOperation.addPostCondition(c.getName());
-					}
-					Parameter retParam = UMLUtil.getReturnParameter(op);
-					for (Parameter param : op.getOwnedParameters()) {
-						try {
-							if (param == retParam) {
-								astahOperation
-										.setQualifiedReturnTypeExpression(getQualifiedTypeExpression(param));
-							} else {
-								IParameter astahParam = bme.createParameter(
-										astahOperation, param.getName(), "void");
-								if (!param.getDirection().equals(
-										ParameterDirectionKind.RETURN_LITERAL)) {
-									astahParam.setDirection(param.getDirection()
-											.getName());
-								}
-								astahParam
-										.setQualifiedTypeExpression(getQualifiedTypeExpression(param));
-								converteds.put(param, astahParam);
-							}
-						} catch (InvalidEditingException ex) {
-							//do nothing, just use default type "void" when failed.
-						}
-					}
-					converteds.put(op, astahOperation);
-				}
+				converter.convert(cls);
 			}
 		}
 	}
@@ -229,52 +143,6 @@ public class XmiToAstah {
 				convertRelationship(r);
 			}
 		}
-	}
-
-	private String getQualifiedTypeExpression(Element element)
-			throws ClassNotFoundException, InvalidEditingException,
-			ProjectNotFoundException {
-		StringBuilder sb = new StringBuilder();
-		if (element instanceof TypedElement) {
-			sb.append(getQualifiedType((TypedElement) element));
-		}
-		if (element instanceof MultiplicityElement) {
-			sb.append(getMultiplicityString((MultiplicityElement) element));
-		}
-		return sb.toString();
-	}
-
-	private Object getMultiplicityString(MultiplicityElement me) {
-		if (me.getLowerValue() != null && me.getUpperValue() != null
-				&& !(me.getLower() == 1 && me.getUpper() == 1)) {
-			return String.format("[%s..%s]",
-					AstahUtil.toMultiplicityRange(me.getLower()),
-					AstahUtil.toMultiplicityRange(me.getUpper()));
-		}
-		return "";
-	}
-
-	private Object getQualifiedType(TypedElement element) throws ClassNotFoundException, InvalidEditingException, ProjectNotFoundException {
-		Type type = element.getType();
-		if (type != null && converteds.get(type) instanceof IClass) {
-			IClass astahClass = (IClass) converteds.get(type);
-			return astahClass.getFullName("::");
-		} else if (type instanceof PrimitiveType || type instanceof DataType) {
-			String name = type.getName();
-			if (name == null || name.equals("")) {
-				name = XMILoader.getId(type);
-			}
-			if (Arrays.asList(AstahUtil.ASTAH_PRIMITIVES).contains(name)) {
-				return name;
-			}
-			IClass astahPrimitive = AstahUtil.getOrCreatePrimitiveClass(name);
-			if (astahPrimitive != null) {
-				converteds.put(type, astahPrimitive);
-				return astahPrimitive.getFullName("::");
-			}
-			return name;
-		}
-		return "int";
 	}
 
 	private INamedElement convertRelationship(Relationship rel)

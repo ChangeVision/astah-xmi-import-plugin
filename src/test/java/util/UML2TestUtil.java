@@ -11,6 +11,7 @@ import org.eclipse.uml2.uml.Component;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.DeploymentSpecification;
+import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Extend;
 import org.eclipse.uml2.uml.Generalization;
@@ -52,6 +53,12 @@ public class UML2TestUtil {
     
     public static EnumerationLiteral createEnumerationLiteral(String name){
         EnumerationLiteral e = instance.createEnumerationLiteral();
+        e.setName(name);
+        return e;
+    }
+    
+    public static Enumeration createEnumeration(String name){
+        Enumeration e = instance.createEnumeration();
         e.setName(name);
         return e;
     }

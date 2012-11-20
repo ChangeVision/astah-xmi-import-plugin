@@ -23,6 +23,8 @@ import org.eclipse.uml2.uml.PackageImport;
 import org.eclipse.uml2.uml.PackageMerge;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Realization;
+import org.eclipse.uml2.uml.TemplateBinding;
+import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.Usage;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,9 +49,6 @@ import com.change_vision.jude.api.inf.model.IRealization;
 import com.change_vision.jude.api.inf.model.IUsage;
 
 public class RelationConverterTest {
-
-    @Mock
-    private ConvertHelper helper;
 
     @Mock
     private Element element;
@@ -342,6 +341,25 @@ public class RelationConverterTest {
         INamedElement element = converter.convert(dependency);
         assertThat(element,is(notNullValue()));        
     }
+    
+    @Test
+    public void notConvertTemplateBinding() throws Exception {
+        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
+        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        TemplateBinding binding = mock(TemplateBinding.class);
+        when(binding.getBoundElement()).thenReturn(dummySourceClassifier);
+        TemplateSignature signature = mock(TemplateSignature.class);
+        when(signature.getTemplate()).thenReturn(dummyTargetClassifier);
+        when(binding.getSignature()).thenReturn(signature );
+        
+        IGeneralization created = mock(IGeneralization.class);
+        when(basicModelEditor.createGeneralization(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), anyString())).thenReturn(created);
+        
+        RelationConverter converter = new RelationConverter(converteds, util);
+        INamedElement element = converter.convert(binding);
+        assertThat(element,is(nullValue()));
+    }
+
     
     @Test
     public void notConvertInformationFlow() throws Exception {

@@ -2,18 +2,15 @@ package com.change_vision.astah.xmi.convert;
 
 import java.io.File;
 
+import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
-import com.change_vision.jude.api.inf.editor.ModelEditorFactory;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
-import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IHyperlink;
 import com.change_vision.jude.api.inf.model.IHyperlinkOwner;
 import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
-import com.change_vision.jude.api.inf.project.ProjectAccessor;
-import com.change_vision.jude.api.inf.project.ProjectAccessorFactory;
 
 public class AstahUtil {
 	
@@ -26,6 +23,8 @@ public class AstahUtil {
 		"unsigned short int", "signed int", "unsigned int", "unsigned long", "long int",	//C++
 		"signed long int", "unsigned long int", "long double", "wchar_t"	//C++
 	};
+	
+	private static AstahAPIUtil util = new AstahAPIUtil();
 
 	public static String getUniqueName(INamedElement[] children, String name) {
 		for (INamedElement child : children) {
@@ -36,14 +35,13 @@ public class AstahUtil {
 		return name;
 	}
 	
-	public static IClass getOrCreatePrimitiveClass(String name) throws ClassNotFoundException, InvalidEditingException, ProjectNotFoundException {
+	public static IClass getOrCreatePrimitiveClass(String name) throws InvalidEditingException {
 		if (name == null) {
 			return null;
 		}
-		BasicModelEditor bme = ModelEditorFactory.getBasicModelEditor();
-		ProjectAccessor pa = ProjectAccessorFactory.getProjectAccessor();
+		BasicModelEditor bme = util.getBasicModelEditor();
 		
-		IModel root = pa.getProject();
+		IModel root = util.getProject();
 		IPackage primitivePkg = findModel(root, PRIMITIVE_PKG, IPackage.class);
 		if (primitivePkg == null) {
 			primitivePkg = bme.createPackage(root, PRIMITIVE_PKG);
