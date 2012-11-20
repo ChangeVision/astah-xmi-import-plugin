@@ -23,7 +23,6 @@ import org.eclipse.uml2.uml.PackageMerge;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Relationship;
-import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.TemplateBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +92,6 @@ public class CommonModelConverter {
                             }
                             helper.setStereotype(uml2Element, newUMLModel);
                         } else if (uml2Element instanceof Class || uml2Element instanceof DataType
-                                || uml2Element instanceof Signal // TODO 扱い
                                 || uml2Element instanceof Interface) {
                             if ( uml2Element instanceof Behavior ) continue;
                             if ( uml2Element instanceof Node ) continue;

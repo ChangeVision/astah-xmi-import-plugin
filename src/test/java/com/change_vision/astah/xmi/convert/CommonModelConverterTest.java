@@ -31,7 +31,6 @@ import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.Type;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -535,7 +534,6 @@ public class CommonModelConverterTest {
     }
 
     @Test
-    @Ignore(value = "astah*には存在しない概念だが…。")
     public void notConvertSignal() throws Exception {
         notConvertPattern(createSignal("name"));
     }
