@@ -8,33 +8,25 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.AggregationKind;
-import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Constraint;
 import org.eclipse.uml2.uml.DataType;
-import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
-import org.eclipse.uml2.uml.Generalization;
-import org.eclipse.uml2.uml.InformationFlow;
 import org.eclipse.uml2.uml.MultiplicityElement;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.PackageImport;
-import org.eclipse.uml2.uml.PackageMerge;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
-import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Relationship;
 import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.TypedElement;
-import org.eclipse.uml2.uml.Usage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +39,6 @@ import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.LicenseNotFoundException;
 import com.change_vision.jude.api.inf.exception.ProjectLockedException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
-import com.change_vision.jude.api.inf.model.IAssociation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -288,51 +279,8 @@ public class XmiToAstah {
 
 	private INamedElement convertRelationship(Relationship rel)
 			throws InvalidEditingException, ClassNotFoundException {
-
-		INamedElement astahSource = (INamedElement) converteds.get(UMLUtil
-				.getSource(rel));
-		INamedElement astahTarget = (INamedElement) converteds.get(UMLUtil
-				.getTarget(rel));
-		if (astahSource == null || astahTarget == null) {
-			return null;
-		}
-		BasicModelEditor bme = ModelEditorFactory.getBasicModelEditor();
-		INamedElement astahRel = null;
-		String name = UMLUtil.getName(rel);
-		if (astahSource instanceof IClass && astahTarget instanceof IClass) {
-			IClass astahSourceClass = (IClass) astahSource;
-			IClass astahTargetClass = (IClass) astahTarget;
-			if (rel instanceof Generalization) {
-				astahRel = bme.createGeneralization(astahSourceClass, astahTargetClass, name);
-			} else if (rel instanceof Realization) {
-				astahRel = bme.createRealization(astahTargetClass, astahSourceClass, name);
-			} else if (rel instanceof Usage) {
-				astahRel = bme.createUsage(astahTargetClass, astahSourceClass, name);
-			} else if (rel instanceof Association) {
-				Property end0 = ((Association) rel).getMemberEnds().get(0);
-				Property end1 = ((Association) rel).getMemberEnds().get(1);
-				if (rel instanceof AssociationClass) {
-					astahRel = bme.createAssociationClass(astahSourceClass, astahTargetClass,
-							name, UMLUtil.getName(end0), UMLUtil.getName(end1));
-				} else {
-					astahRel = bme.createAssociation(astahSourceClass, astahTargetClass,
-							name, UMLUtil.getName(end0), UMLUtil.getName(end1));
-				}
-				if (astahRel instanceof IAssociation) {
-					IAttribute[] memberEnds = ((IAssociation) astahRel)
-							.getMemberEnds();
-					converteds.put(end0, memberEnds[0]);
-					converteds.put(end1, memberEnds[1]);
-				}
-			}
-		} else if (rel instanceof PackageImport || rel instanceof PackageMerge
-				|| rel instanceof Dependency || rel instanceof InformationFlow) {
-			astahRel = bme.createDependency(astahSource, astahTarget, name);
-		}
-		if (astahRel != null) {
-			converteds.put(rel, astahRel);
-		}
-		return astahRel;
+	    RelationConverter converter = new RelationConverter(converteds, apiUtil);
+	    return converter.convert(rel);
 	}
 
 	private void convertNormalModel(INamedElement model, Element parent)

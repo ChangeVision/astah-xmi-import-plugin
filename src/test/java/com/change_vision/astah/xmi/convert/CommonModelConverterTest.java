@@ -255,6 +255,25 @@ public class CommonModelConverterTest {
         Relationship relationship = relationships.get(EcoreUtil.getURI(dependency).fragment());
         assertThat(relationship, is(notNullValue()));
     }
+    
+    @Test
+    public void convertRealization() throws Exception {
+        IClass owned = mock(IClass.class);
+        when(owned.getName()).thenReturn("owned");
+        when(owned.getNestedClasses()).thenReturn(new IClass[] {});
+
+        EList<Element> elements = new BasicEList<Element>();
+        Dependency realization = createRealization("test");
+        elements.add(realization);
+        when(element.getOwnedElements()).thenReturn(elements);
+
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
+        converter.setAstahAPIUtil(util);
+        converter.convert(owned, element);
+
+        Relationship relationship = relationships.get(EcoreUtil.getURI(realization).fragment());
+        assertThat(relationship, is(notNullValue()));        
+    }
 
     @Test
     public void convertInterface() throws Exception {
@@ -365,7 +384,7 @@ public class CommonModelConverterTest {
     }
     
     @Test
-    public void convertInformationFlow() throws Exception {
+    public void notConvertInformationFlow() throws Exception {
         when(model.getOwnedElements()).thenReturn(new INamedElement[] {});
 
         EList<Element> elements = new BasicEList<Element>();
@@ -378,7 +397,7 @@ public class CommonModelConverterTest {
         converter.convert(model, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(flow).fragment());
-        assertThat(relationship, is(notNullValue()));
+        assertThat(relationship, is(nullValue()));
         
     }
     

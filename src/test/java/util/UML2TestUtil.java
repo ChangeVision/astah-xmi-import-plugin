@@ -26,6 +26,7 @@ import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.State;
 import org.eclipse.uml2.uml.StateMachine;
@@ -214,6 +215,12 @@ public class UML2TestUtil {
         return include;
     }
     
+    public static Realization createRealization(String name){
+        Realization realization = instance.createRealization();
+        realization.setName(name);
+        return realization;
+    }
+        
     public static InformationFlow createInformationFlow(String name){
         InformationFlow flow = instance.createInformationFlow();
         flow.setName(name);

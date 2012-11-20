@@ -13,7 +13,6 @@ import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Generalization;
-import org.eclipse.uml2.uml.InformationFlow;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Node;
@@ -118,8 +117,7 @@ public class CommonModelConverter {
                             String className = baseClass.getSimpleName();
                             logger.trace("doesn't target of CommonModelConverter:{}",className);
                         }
-                    } else if ( uml2Element instanceof Dependency ||
-                        uml2Element instanceof InformationFlow) {
+                    } else if ( uml2Element instanceof Dependency) {
                         rememberRelationship(uml2Element);
                     }
                 } else if (uml2Element instanceof Generalization) {
