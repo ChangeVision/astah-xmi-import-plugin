@@ -7,13 +7,10 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.AssociationClass;
-import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.Component;
 import org.eclipse.uml2.uml.Constraint;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Dependency;
@@ -22,10 +19,7 @@ import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Generalization;
 import org.eclipse.uml2.uml.InformationFlow;
-import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.MultiplicityElement;
-import org.eclipse.uml2.uml.NamedElement;
-import org.eclipse.uml2.uml.Node;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageImport;
@@ -37,20 +31,17 @@ import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Relationship;
-import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.TemplateBinding;
-import org.eclipse.uml2.uml.TemplateableElement;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.TypedElement;
 import org.eclipse.uml2.uml.Usage;
-import org.eclipse.uml2.uml.UseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.editor.ModelEditorFactory;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
-import com.change_vision.jude.api.inf.editor.UseCaseModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.LicenseNotFoundException;
@@ -63,7 +54,6 @@ import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IOperation;
-import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IParameter;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 import com.change_vision.jude.api.inf.project.ProjectAccessorFactory;
@@ -84,6 +74,7 @@ public class XmiToAstah {
 	private String fromPath;
 	private Map<Element, IElement> converteds = new HashMap<Element, IElement>();
 	private Map<String, Relationship> relationships = new HashMap<String, Relationship>();
+	private AstahAPIUtil apiUtil = new AstahAPIUtil();
 
 	public XmiToAstah(String xmiPath) throws IOException {
 		this.fromPath = xmiPath;
@@ -349,104 +340,8 @@ public class XmiToAstah {
 		if (model == null || parent == null) {
 			return;
 		}
-		BasicModelEditor bme = ModelEditorFactory.getBasicModelEditor();
-		UseCaseModelEditor ucme = ModelEditorFactory.getUseCaseModelEditor();
-		for (Element e : parent.getOwnedElements()) {
-			INamedElement newUMLModel = null;
-			try {
-				if (e instanceof NamedElement) {
-					INamedElement[] children = getElementsShouldBeUniqueName(
-							model, e);
-					String name = AstahUtil.getUniqueName(children,
-							UMLUtil.getName(e));
-
-					if (e instanceof Package) {
-						if (model instanceof IPackage) {
-							newUMLModel = bme.createPackage((IPackage) model,
-									name);
-							for (PackageImport pi : ((Package) e)
-									.getPackageImports()) {
-								rememberRelationship(pi);
-							}
-							for (PackageMerge pm : ((Package) e)
-									.getPackageMerges()) {
-								rememberRelationship(pm);
-							}
-						}
-					} else if (e instanceof Classifier) {
-						if (e instanceof Association) {
-							if (!((Association) e).getMemberEnds().isEmpty()) {
-								rememberRelationship(e);
-							}
-						} else if (e instanceof UseCase) {
-							if (model instanceof IPackage) {
-								newUMLModel = ucme.createUseCase(
-										(IPackage) model, name);
-							}
-						} else if (e instanceof Actor) {
-							if (model instanceof IPackage) {
-								newUMLModel = ucme.createActor(
-										(IPackage) model, name);
-							}
-						} else if (e instanceof Class || e instanceof DataType
-								|| e instanceof Signal
-								|| e instanceof Interface) {
-							if (e instanceof Node || e instanceof Component) {
-								continue;
-							}
-							if ((e instanceof PrimitiveType || e instanceof DataType)
-									&& Arrays
-											.asList(AstahUtil.ASTAH_PRIMITIVES)
-											.contains(name)) {
-								continue;
-							}
-							if (model instanceof IPackage) {
-								newUMLModel = bme.createClass((IPackage) model, name);
-							} else if (model instanceof IClass) {
-								newUMLModel = bme.createClass((IClass) model, name);
-							}
-							for (TemplateBinding binding : ((TemplateableElement) e)
-									.getTemplateBindings()) {
-								rememberRelationship(binding);
-							}
-						}
-						helper.setStereotype(e, newUMLModel);
-					} else if (e instanceof Relationship) {
-						rememberRelationship(e);
-					}
-				} else if (e instanceof Generalization) {
-					rememberRelationship(e);
-				}
-			} catch (InvalidEditingException ex) {
-				continue;
-			}
-			if (newUMLModel != null) {
-				converteds.put(e, newUMLModel);
-			}
-			convertNormalModel(newUMLModel, e);
-		}
+		CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
+		converter.convert(model,parent);
 	}
 
-	private void rememberRelationship(Element e) {
-		if (e instanceof Relationship) {
-			relationships.put(XMILoader.getId(e), (Relationship) e);
-		}
-	}
-
-	private INamedElement[] getElementsShouldBeUniqueName(INamedElement owner,
-			Element e) {
-		INamedElement[] children = new INamedElement[0];
-		if (owner instanceof IPackage) {
-			children = ((IPackage) owner).getOwnedElements();
-		} else if (owner instanceof IClass) {
-			if (e instanceof Classifier) {
-				children = ((IClass) owner).getNestedClasses();
-			} else if (e instanceof Property || e instanceof EnumerationLiteral) {
-				children = ((IClass) owner).getAttributes();
-			}
-		} else if (owner instanceof IOperation) {
-			children = ((IOperation) owner).getParameters();
-		}
-		return children;
-	}
 }

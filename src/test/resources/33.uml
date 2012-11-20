@@ -17,7 +17,7 @@
   <packagedElement xmi:type="uml:Class" xmi:id="_uscmEZWIEeGTxJ0BRfQfNw" name="Child">
     <generalization xmi:id="_0lJe0JWIEeGTxJ0BRfQfNw" general="_8T5qwZT6EeGlkdx10O5w5w"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_a8kokJmuEeG4Df8tqwhC-g" name="Chidl2">
+  <packagedElement xmi:type="uml:Class" xmi:id="_a8kokJmuEeG4Df8tqwhC-g" name="Child2">
     <generalization xmi:id="_cjY1YJmuEeG4Df8tqwhC-g" general="_8T5qwZT6EeGlkdx10O5w5w"/>
   </packagedElement>
 </uml:Package>
