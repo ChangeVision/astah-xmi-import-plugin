@@ -33,7 +33,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
-import com.change_vision.jude.api.inf.editor.UseCaseModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IAssociation;
 import com.change_vision.jude.api.inf.model.IAssociationClass;
@@ -61,9 +60,6 @@ public class RelationConverterTest {
 
     @Mock
     private BasicModelEditor basicModelEditor;
-
-    @Mock
-    private UseCaseModelEditor useCaseModelEditor;
 
     @Mock
     private Classifier dummySourceClassifier;
@@ -95,7 +91,6 @@ public class RelationConverterTest {
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        when(util.getUseCaseModelEditor()).thenReturn(useCaseModelEditor);
 
         converteds = new HashMap<Element, IElement>();
     }

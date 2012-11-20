@@ -30,6 +30,7 @@ import com.change_vision.jude.api.inf.model.IParameter;
 
 public class FeatureConverter {
 
+    private static final String DEFAULT_OPERATION_RETURN_TYPE = "void";
     private static final String DEFAULT_ATTRIUBTE_TYPE = "int";
     private Map<Element, IElement> converteds;
     private AstahAPIUtil apiUtil;
@@ -77,7 +78,7 @@ public class FeatureConverter {
         }
         for (Operation op : cls.getOperations()) {
             IOperation astahOperation = getBasicModelEditor().createOperation(astahClass,
-                    op.getName(), "void");
+                    op.getName(), DEFAULT_OPERATION_RETURN_TYPE);
             astahOperation.setStatic(op.isStatic());
             astahOperation.setAbstract(op.isAbstract());
             for (Constraint c : op.getPreconditions()) {
@@ -94,7 +95,7 @@ public class FeatureConverter {
                                 .setQualifiedReturnTypeExpression(getQualifiedTypeExpression(param));
                     } else {
                         IParameter astahParam = getBasicModelEditor().createParameter(
-                                astahOperation, param.getName(), "void");
+                                astahOperation, param.getName(), DEFAULT_OPERATION_RETURN_TYPE);
                         if (!param.getDirection().equals(
                                 ParameterDirectionKind.RETURN_LITERAL)) {
                             astahParam.setDirection(param.getDirection()

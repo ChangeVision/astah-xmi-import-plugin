@@ -25,7 +25,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
-import com.change_vision.jude.api.inf.editor.UseCaseModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
@@ -40,16 +39,12 @@ public class FeatureConverterTest {
     @Mock
     private BasicModelEditor basicModelEditor;
 
-    @Mock
-    private UseCaseModelEditor useCaseModelEditor;
-
     private HashMap<Element, IElement> converteds;
     
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        when(util.getUseCaseModelEditor()).thenReturn(useCaseModelEditor);
 
         converteds = new HashMap<Element, IElement>();   
     }

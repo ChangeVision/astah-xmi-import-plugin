@@ -3,7 +3,6 @@ package com.change_vision.astah.xmi;
 import com.change_vision.astah.xmi.exception.IllegalUseByCommunityEditionException;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.editor.IModelEditorFactory;
-import com.change_vision.jude.api.inf.editor.UseCaseModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.IModel;
@@ -34,14 +33,6 @@ public class AstahAPIUtil {
         } catch (InvalidEditingException e) {
             throw new IllegalUseByCommunityEditionException();
         }
-    }
-
-    public UseCaseModelEditor getUseCaseModelEditor(){
-        try {
-            return getModelEditorFactory().getUseCaseModelEditor();
-        } catch (InvalidEditingException e) {
-            throw new IllegalUseByCommunityEditionException();
-        }        
     }
 
     private IModelEditorFactory getModelEditorFactory() {
