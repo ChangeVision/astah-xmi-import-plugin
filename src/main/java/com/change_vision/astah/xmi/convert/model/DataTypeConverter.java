@@ -23,14 +23,14 @@ import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 
-public class DataTypeModelConverter implements ModelConverter {
+public class DataTypeConverter implements ModelConverter {
 
     private UniqueNameCreator uniqueNameCreator = new UniqueNameCreator();
     private AstahAPIUtil apiUtil;
     private Map<String, Relationship> relationships;
     private ConvertHelper helper;
 
-    public DataTypeModelConverter(Map<String, Relationship> relationships, AstahAPIUtil util, ConvertHelper helper) {
+    public DataTypeConverter(Map<String, Relationship> relationships, AstahAPIUtil util, ConvertHelper helper) {
         this.apiUtil = util;
         this.relationships = relationships;
         this.helper = helper;

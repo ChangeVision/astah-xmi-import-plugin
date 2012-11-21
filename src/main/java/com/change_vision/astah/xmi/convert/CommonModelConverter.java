@@ -14,11 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.astah.xmi.convert.model.ClassModelConverter;
-import com.change_vision.astah.xmi.convert.model.DataTypeModelConverter;
-import com.change_vision.astah.xmi.convert.model.InterfaceModelConverter;
+import com.change_vision.astah.xmi.convert.model.ClassConverter;
+import com.change_vision.astah.xmi.convert.model.DataTypeConverter;
+import com.change_vision.astah.xmi.convert.model.InterfaceConverter;
 import com.change_vision.astah.xmi.convert.model.ModelConverter;
-import com.change_vision.astah.xmi.convert.model.PackageModelConverter;
+import com.change_vision.astah.xmi.convert.model.PackageConverter;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.INamedElement;
@@ -36,10 +36,10 @@ public class CommonModelConverter {
     public CommonModelConverter(ConvertHelper helper, Map<Element, IElement> converteds, Map<String, Relationship> relationships,AstahAPIUtil util) {
         this.converteds = converteds;
         this.relationships = relationships;
-        this.converters.add(new PackageModelConverter(relationships, util, helper));
-        this.converters.add(new ClassModelConverter(relationships, util, helper));
-        this.converters.add(new InterfaceModelConverter(relationships, util, helper));
-        this.converters.add(new DataTypeModelConverter(relationships, util, helper));
+        this.converters.add(new PackageConverter(relationships, util, helper));
+        this.converters.add(new ClassConverter(relationships, util, helper));
+        this.converters.add(new InterfaceConverter(relationships, util, helper));
+        this.converters.add(new DataTypeConverter(relationships, util, helper));
     }
     
     public void convert(INamedElement astahElement, Element parent) throws InvalidEditingException, ClassNotFoundException {

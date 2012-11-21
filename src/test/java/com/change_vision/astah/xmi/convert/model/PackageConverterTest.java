@@ -27,7 +27,7 @@ import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 
-public class PackageModelConverterTest {
+public class PackageConverterTest {
 
     @Mock
     private AstahAPIUtil util;
@@ -47,7 +47,7 @@ public class PackageModelConverterTest {
     @Mock
     private ConvertHelper helper;
 
-    private PackageModelConverter converter;
+    private PackageConverter converter;
 
     private Map<String, Relationship> relationships;
 
@@ -56,7 +56,7 @@ public class PackageModelConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         relationships = new HashMap<String, Relationship>();
-        converter = new PackageModelConverter(relationships, util, helper);
+        converter = new PackageConverter(relationships, util, helper);
     }
 
     @Test
