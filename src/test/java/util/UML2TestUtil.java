@@ -31,6 +31,7 @@ import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.State;
 import org.eclipse.uml2.uml.StateMachine;
+import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UseCase;
@@ -144,6 +145,12 @@ public class UML2TestUtil {
         Node node = instance.createNode();
         node.setName(name);
         return node;
+    }
+    
+    public static Stereotype createStereotype(String name){
+        Stereotype stereotype = instance.createStereotype();
+        stereotype.setName(name);
+        return stereotype;
     }
     
     public static Component createComponent(String name){

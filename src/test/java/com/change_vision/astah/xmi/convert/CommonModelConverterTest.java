@@ -79,13 +79,13 @@ public class CommonModelConverterTest {
 
     @Test
     public void convertWithNullModelIsOK() throws InvalidEditingException, ClassNotFoundException {
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(null, element);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void convertWithNullElement() throws Exception {
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, null);
     }
     
@@ -99,14 +99,13 @@ public class CommonModelConverterTest {
         when(element.getOwnedElements()).thenReturn(elements);
         when(basicModelEditor.createClass(model, "test")).thenThrow(new InvalidEditingException("hoge", "huga"));
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
     }
 
     @Test
     public void convertEmptyElement() throws Exception {
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         EList<Element> elements = new BasicEList<Element>();
         when(element.getOwnedElements()).thenReturn(elements);
         converter.convert(model, element);
@@ -128,8 +127,7 @@ public class CommonModelConverterTest {
         elements.add(clazz);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
         verify(basicModelEditor).createClass(eq(owned), eq("test"));
     }
@@ -147,8 +145,7 @@ public class CommonModelConverterTest {
         elements.add(prop);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
         
         verify(basicModelEditor,never()).createAttribute(eq(owned), anyString(), org.mockito.Matchers.any(IClass.class));
@@ -166,8 +163,7 @@ public class CommonModelConverterTest {
         elements.add(enumerationLiteral);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
         
         verify(basicModelEditor,never()).createAttribute(eq(owned), anyString(), org.mockito.Matchers.any(IClass.class));
@@ -185,8 +181,7 @@ public class CommonModelConverterTest {
         elements.add(operation);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
         
         verify(basicModelEditor,never()).createOperation(eq(owned), anyString(), org.mockito.Matchers.any(IClass.class));
@@ -205,8 +200,7 @@ public class CommonModelConverterTest {
         elements.add(parameter);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
         
         verify(basicModelEditor,never()).createParameter(eq(owned), anyString(), org.mockito.Matchers.any(IClass.class));
@@ -224,8 +218,7 @@ public class CommonModelConverterTest {
         elements.add(generalization);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(generalization).fragment());
@@ -243,8 +236,7 @@ public class CommonModelConverterTest {
         elements.add(dependency);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(dependency).fragment());
@@ -262,8 +254,7 @@ public class CommonModelConverterTest {
         elements.add(realization);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(owned, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(realization).fragment());
@@ -284,8 +275,7 @@ public class CommonModelConverterTest {
         elements.add(pack);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor).createPackage(eq(model), eq("test"));
@@ -306,8 +296,7 @@ public class CommonModelConverterTest {
         Package imported = createPackage("imported");
         PackageImport packageImport = pack.createPackageImport(imported);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor).createPackage(eq(model), eq("test"));
@@ -330,8 +319,7 @@ public class CommonModelConverterTest {
         Package merged = createPackage("merged");
         PackageMerge packageMerge = pack.createPackageMerge(merged);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor).createPackage(eq(model), eq("test"));
@@ -351,8 +339,7 @@ public class CommonModelConverterTest {
         association.createOwnedEnd("fuga", clazz);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(association).fragment());
@@ -370,8 +357,7 @@ public class CommonModelConverterTest {
         elements.add(clazz);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(binding).fragment());
@@ -387,8 +373,7 @@ public class CommonModelConverterTest {
         elements.add(flow);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(flow).fragment());
@@ -414,8 +399,7 @@ public class CommonModelConverterTest {
         elements.add(target);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         Relationship relationship = relationships.get(EcoreUtil.getURI(target).fragment());
@@ -437,8 +421,7 @@ public class CommonModelConverterTest {
         elements.add(primitiveType);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor, never()).createClass(eq(model), eq("boolean"));
@@ -458,8 +441,7 @@ public class CommonModelConverterTest {
         elements.add(dataType);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor, never()).createClass(eq(model), eq("boolean"));
@@ -476,8 +458,7 @@ public class CommonModelConverterTest {
         elements.add(clazz);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
         verify(basicModelEditor).createClass(eq(model), eq("test0"));
     }
@@ -562,8 +543,7 @@ public class CommonModelConverterTest {
         IClass clazz = mock(IClass.class);
         when(basicModelEditor.createClass(model, "test")).thenReturn(clazz);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor).createClass(model, "test");
@@ -579,8 +559,7 @@ public class CommonModelConverterTest {
         elements.add(target);
         when(element.getOwnedElements()).thenReturn(elements);
 
-        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
-        converter.setAstahAPIUtil(util);
+        CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);
 
         verify(basicModelEditor, never()).createClass(model, "test");

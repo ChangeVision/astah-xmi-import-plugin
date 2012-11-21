@@ -30,6 +30,7 @@ import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IOperation;
+import com.change_vision.jude.api.inf.model.IParameter;
 
 public class FeatureConverterTest {
     
@@ -162,4 +163,54 @@ public class FeatureConverterTest {
         assertThat(converteds.size(),is(2));
     }
 
+    @Test
+    public void convertOperationReturnType() throws Exception {
+        Class classifier = createClass("classifier");
+        EList<String> params = new BasicEList<String>();
+        EList<Type> paramTypes = new BasicEList<Type>();
+        Class returnType = createClass("returnType");
+        classifier.createOwnedOperation("operation", params , paramTypes, returnType);
+
+        IClass clazz = mock(IClass.class);
+        converteds.put(classifier,clazz);
+        IClass returnClazz = mock(IClass.class);
+        when(returnClazz.getFullName("::")).thenReturn("returnType");
+        converteds.put(returnType,returnClazz);
+
+        IOperation operation = mock(IOperation.class);
+        when(basicModelEditor.createOperation(eq(clazz), anyString(), eq("void"))).thenReturn(operation);
+
+        FeatureConverter converter = new FeatureConverter(converteds, util);
+        converter.convert(classifier);
+        
+        assertThat(converteds.size(),is(3));
+        verify(operation).setQualifiedReturnTypeExpression("returnType");
+    }
+    
+    @Test
+    public void convertOperationWithParameter() throws Exception {
+        Class classifier = createClass("classifier");
+
+        EList<String> params = new BasicEList<String>();
+        params.add("param");
+
+        EList<Type> paramTypes = new BasicEList<Type>();
+        paramTypes.add(classifier);
+        classifier.createOwnedOperation("operation", params , paramTypes);
+
+        IClass clazz = mock(IClass.class);
+        converteds.put(classifier,clazz);
+
+        IOperation operation = mock(IOperation.class);
+        when(basicModelEditor.createOperation(eq(clazz), anyString(), eq("void"))).thenReturn(operation);
+        
+        IParameter parameter = mock(IParameter.class);
+        when(basicModelEditor.createParameter(operation, "param", "void")).thenReturn(parameter);
+
+        FeatureConverter converter = new FeatureConverter(converteds, util);
+        converter.convert(classifier);
+        assertThat(converteds.size(),is(3));
+    }
+
+    
 }

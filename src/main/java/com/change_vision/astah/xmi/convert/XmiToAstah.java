@@ -156,7 +156,7 @@ public class XmiToAstah {
 		if (model == null || parent == null) {
 			return;
 		}
-		CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships);
+		CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, apiUtil);
 		converter.convert(model,parent);
 	}
 
