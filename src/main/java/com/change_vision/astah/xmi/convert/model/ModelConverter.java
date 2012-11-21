@@ -4,12 +4,12 @@ import org.eclipse.uml2.uml.Element;
 
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IElement;
+import com.change_vision.jude.api.inf.model.INamedElement;
 
 /**
  * convert UML2 to Astah model interface
- * @param <TARGET> target model type
  */
-public interface ModelConverter<TARGET extends IElement> {
+public interface ModelConverter {
     
     /**
      * accepts UML2 element 
@@ -24,8 +24,15 @@ public interface ModelConverter<TARGET extends IElement> {
      * @return
      * @throws InvalidEditingException
      */
-    public TARGET convert(Element element) throws InvalidEditingException;
+    public INamedElement convert(Element element) throws InvalidEditingException;
     
-    public TARGET convert(IElement parent, Element element) throws InvalidEditingException;
+    /**
+     * convert the element to Astah model
+     * @param parent the model of parent in Astah
+     * @param element the element of converted UML2 model
+     * @return converted Astah model
+     * @throws InvalidEditingException
+     */
+    public INamedElement convert(IElement parent, Element element) throws InvalidEditingException;
 
 }

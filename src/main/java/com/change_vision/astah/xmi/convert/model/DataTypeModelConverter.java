@@ -23,7 +23,7 @@ import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 
-public class DataTypeModelConverter implements ModelConverter<IClass> {
+public class DataTypeModelConverter implements ModelConverter {
 
     private UniqueNameCreator uniqueNameCreator = new UniqueNameCreator();
     private AstahAPIUtil apiUtil;
