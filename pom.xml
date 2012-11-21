@@ -400,5 +400,11 @@
 			<optional>true</optional>
 			<scope>test</scope>
 		</dependency>
+    <dependency>
+      <groupId>com.change_vision.astah</groupId>
+      <artifactId>mockito-all-1.8.4</artifactId>
+      <version>1.0</version>
+      <scope>test</scope>
+    </dependency>
 	</dependencies>
 </project>
