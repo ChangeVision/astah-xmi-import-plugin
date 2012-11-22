@@ -10,8 +10,8 @@ import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.TypedElement;
 
-import com.change_vision.astah.xmi.convert.AstahUtil;
-import com.change_vision.astah.xmi.convert.XMILoader;
+import com.change_vision.astah.xmi.internal.convert.AstahUtil;
+import com.change_vision.astah.xmi.internal.convert.XMILoader;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;

@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.change_vision.astah.xmi.convert.XmiToAstah;
+import com.change_vision.astah.xmi.internal.convert.XmiToAstah;
 import com.change_vision.astah.xmi.view.MessageView;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.LicenseNotFoundException;
