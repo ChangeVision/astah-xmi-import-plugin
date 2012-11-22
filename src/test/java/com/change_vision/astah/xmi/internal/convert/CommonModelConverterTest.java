@@ -31,13 +31,12 @@ import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.Type;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.astah.xmi.internal.convert.CommonModelConverter;
-import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IAttribute;
@@ -353,6 +352,7 @@ public class CommonModelConverterTest {
     }
 
     @Test
+    @Ignore
     public void convertTemplateBinding() throws Exception {
         when(model.getOwnedElements()).thenReturn(new INamedElement[] {});
 
