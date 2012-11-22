@@ -34,6 +34,7 @@ import org.eclipse.uml2.uml.StateMachine;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.Usage;
 import org.eclipse.uml2.uml.UseCase;
 
 public class UML2TestUtil {
@@ -121,6 +122,12 @@ public class UML2TestUtil {
         Dependency dep = instance.createDependency();
         dep.setName(name);
         return dep;
+    }
+    
+    public static Usage createUsage(String name){
+        Usage usage = instance.createUsage();
+        usage.setName(name);
+        return usage;
     }
     
     public static UseCase createUseCase(String name){
