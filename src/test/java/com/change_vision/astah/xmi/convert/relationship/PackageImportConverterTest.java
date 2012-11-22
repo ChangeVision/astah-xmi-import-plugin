@@ -3,9 +3,10 @@ package com.change_vision.astah.xmi.convert.relationship;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static util.UML2TestUtil.createRealization;
+import static util.UML2TestUtil.createPackage;
 
-import org.eclipse.uml2.uml.Relationship;
+import org.eclipse.uml2.uml.Package;
+import org.eclipse.uml2.uml.PackageImport;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,7 +18,9 @@ import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IPackage;
 
-public class RealizationConverterTest {
+
+public class PackageImportConverterTest {
+
 
     @Mock
     private AstahAPIUtil util;
@@ -34,25 +37,27 @@ public class RealizationConverterTest {
     @Mock
     private ConvertHelper helper;
 
-    private RealizationConverter converter;
+    private PackageImportConverter converter;
 
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        converter = new RealizationConverter(util, helper);
+        converter = new PackageImportConverter(util, helper);
     }
     
     @Test
-    public void rejectWithNull() throws Exception {
+    public void rejectWithNull() {
         boolean result = converter.accepts(null);
-        assertThat(result,is(false));        
+        assertThat(result,is(false));
     }
     
     @Test
-    public void acceptRealization() {
-        Relationship element = createRealization("hoge");
-        boolean result = converter.accepts(element);
+    public void acceptPackageImport() throws Exception {
+        Package pack = createPackage("pack");
+        Package imported = createPackage("imported");
+        PackageImport relationship = pack.createPackageImport(imported);
+        boolean result = converter.accepts(relationship);
         assertThat(result,is(true));
     }
 

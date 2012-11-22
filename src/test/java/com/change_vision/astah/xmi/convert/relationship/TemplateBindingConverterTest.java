@@ -3,7 +3,7 @@ package com.change_vision.astah.xmi.convert.relationship;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static util.UML2TestUtil.createRealization;
+import static util.UML2TestUtil.createTemplateBinding;
 
 import org.eclipse.uml2.uml.Relationship;
 import org.junit.Before;
@@ -17,7 +17,7 @@ import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IPackage;
 
-public class RealizationConverterTest {
+public class TemplateBindingConverterTest {
 
     @Mock
     private AstahAPIUtil util;
@@ -34,25 +34,25 @@ public class RealizationConverterTest {
     @Mock
     private ConvertHelper helper;
 
-    private RealizationConverter converter;
+    private TemplateBindingConverter converter;
 
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        converter = new RealizationConverter(util, helper);
+        converter = new TemplateBindingConverter(util, helper);
     }
     
     @Test
-    public void rejectWithNull() throws Exception {
+    public void rejectWithNull() {
         boolean result = converter.accepts(null);
-        assertThat(result,is(false));        
+        assertThat(result,is(false));
     }
     
     @Test
-    public void acceptRealization() {
-        Relationship element = createRealization("hoge");
-        boolean result = converter.accepts(element);
+    public void acceptTemplateBinding() throws Exception {
+        Relationship relationship = createTemplateBinding();
+        boolean result = converter.accepts(relationship);
         assertThat(result,is(true));
     }
 

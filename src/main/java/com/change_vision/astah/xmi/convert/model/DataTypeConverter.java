@@ -3,20 +3,16 @@ package com.change_vision.astah.xmi.convert.model;
 import static java.lang.String.format;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Interface;
-import org.eclipse.uml2.uml.Relationship;
-import org.eclipse.uml2.uml.TemplateBinding;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.convert.AstahUtil;
 import com.change_vision.astah.xmi.convert.ConvertHelper;
-import com.change_vision.astah.xmi.convert.XMILoader;
 import com.change_vision.astah.xmi.convert.exception.NotForUseException;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IClass;
@@ -27,12 +23,10 @@ public class DataTypeConverter implements ModelConverter {
 
     private UniqueNameCreator uniqueNameCreator = new UniqueNameCreator();
     private AstahAPIUtil apiUtil;
-    private Map<String, Relationship> relationships;
     private ConvertHelper helper;
 
-    public DataTypeConverter(Map<String, Relationship> relationships, AstahAPIUtil util, ConvertHelper helper) {
+    public DataTypeConverter(AstahAPIUtil util, ConvertHelper helper) {
         this.apiUtil = util;
-        this.relationships = relationships;
         this.helper = helper;
     }
 
@@ -69,9 +63,6 @@ public class DataTypeConverter implements ModelConverter {
                 name = uniqueNameCreator.getUniqueName(parentClass.getAttributes(), name);                
             }
             results = apiUtil.getBasicModelEditor().createClass(parentClass, name);            
-        }
-        for (TemplateBinding binding : target.getTemplateBindings()) {
-            relationships.put(XMILoader.getId(binding), binding);
         }
         helper.setStereotype(element, results);
         return results;

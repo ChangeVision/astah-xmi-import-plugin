@@ -292,6 +292,8 @@ public class CommonModelConverterTest {
         elements.add(pack);
 
         when(element.getOwnedElements()).thenReturn(elements);
+        IPackage created = mock(IPackage.class);
+        when(basicModelEditor.createPackage(model, "test")).thenReturn(created );
 
         Package imported = createPackage("imported");
         PackageImport packageImport = pack.createPackageImport(imported);
@@ -315,6 +317,8 @@ public class CommonModelConverterTest {
         elements.add(pack);
 
         when(element.getOwnedElements()).thenReturn(elements);
+        IPackage created = mock(IPackage.class);
+        when(basicModelEditor.createPackage(model, "test")).thenReturn(created );
 
         Package merged = createPackage("merged");
         PackageMerge packageMerge = pack.createPackageMerge(merged);
@@ -356,6 +360,8 @@ public class CommonModelConverterTest {
         TemplateBinding binding = clazz.createTemplateBinding(signature);
         elements.add(clazz);
         when(element.getOwnedElements()).thenReturn(elements);
+        IClass created = mock(IClass.class);
+        when(basicModelEditor.createClass(model, "test")).thenReturn(created );
 
         CommonModelConverter converter = new CommonModelConverter(helper, converteds, relationships, util);
         converter.convert(model, element);

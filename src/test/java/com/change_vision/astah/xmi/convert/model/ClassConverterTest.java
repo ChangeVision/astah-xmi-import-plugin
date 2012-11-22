@@ -7,13 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static util.UML2TestUtil.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.Relationship;
-import org.eclipse.uml2.uml.TemplateSignature;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -47,14 +42,11 @@ public class ClassConverterTest {
 
     private ClassConverter converter;
 
-    private Map<String, Relationship> relationships;
-
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        relationships = new HashMap<String, Relationship>();
-        converter = new ClassConverter(relationships, util, helper);
+        converter = new ClassConverter(util, helper);
     }
 
     @Test
@@ -136,21 +128,6 @@ public class ClassConverterTest {
         when(basicModelEditor.createClass(parentPackage, "dummy0")).thenReturn(result);
         IElement converted = converter.convert(parentPackage, target);
         assertThat(converted, is(notNullValue()));
-    }
-
-    @Test
-    public void convertWithTemplateBinding() throws Exception {
-        org.eclipse.uml2.uml.Class target = createClass("dummy");
-        TemplateSignature signature = createTemplateSignature();
-        target.createTemplateBinding(signature);
-        IClass result = mock(IClass.class);
-        INamedElement existed = mock(IClass.class);
-        when(existed.getName()).thenReturn("dummy");
-        when(parentPackage.getOwnedElements()).thenReturn(new INamedElement[] { existed });
-        when(basicModelEditor.createClass(parentPackage, "dummy0")).thenReturn(result);
-        IElement converted = converter.convert(parentPackage, target);
-        assertThat(converted, is(notNullValue()));
-        assertThat(relationships.size(), is(1));
     }
 
     @Test

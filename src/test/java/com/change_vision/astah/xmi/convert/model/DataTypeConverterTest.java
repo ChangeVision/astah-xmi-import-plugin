@@ -6,11 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static util.UML2TestUtil.createDataType;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.Relationship;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -42,15 +38,12 @@ public class DataTypeConverterTest {
     private ConvertHelper helper;
 
     private DataTypeConverter converter;
-    
-    private Map<String, Relationship> relationships;
-    
+        
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        relationships = new HashMap<String, Relationship>();
-        converter = new DataTypeConverter(relationships,util, helper);
+        converter = new DataTypeConverter(util, helper);
     }
 
     @Test

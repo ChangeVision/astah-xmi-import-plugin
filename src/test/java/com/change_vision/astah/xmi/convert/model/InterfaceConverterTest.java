@@ -5,15 +5,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static util.UML2TestUtil.createInterface;
-import static util.UML2TestUtil.createTemplateSignature;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.Interface;
-import org.eclipse.uml2.uml.Relationship;
-import org.eclipse.uml2.uml.TemplateSignature;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -47,15 +40,11 @@ public class InterfaceConverterTest {
 
     private InterfaceConverter converter;
     
-    private Map<String, Relationship> relationships;
-
-
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        relationships = new HashMap<String, Relationship>();
-        converter = new InterfaceConverter(relationships,util, helper);
+        converter = new InterfaceConverter(util, helper);
     }
     
     @Test
@@ -110,22 +99,4 @@ public class InterfaceConverterTest {
         assertThat(converted,is(notNullValue()));
     }
     
-    @Test
-    public void convertWithTemplateBinding() throws Exception {
-        Interface target = createInterface("dummy");
-        TemplateSignature signature = createTemplateSignature();
-        target.createTemplateBinding(signature);
-        IClass result = mock(IClass.class);
-        INamedElement existed = mock(IClass.class);
-        when(existed.getName()).thenReturn("dummy");
-        when(parentPackage.getOwnedElements()).thenReturn(new INamedElement[]{
-                existed
-        });
-        when(basicModelEditor.createClass(parentPackage, "dummy0")).thenReturn(result);
-        IElement converted = converter.convert(parentPackage, target);
-        assertThat(converted,is(notNullValue()));
-        assertThat(relationships.size(),is(1));
-    }
-
-
 }

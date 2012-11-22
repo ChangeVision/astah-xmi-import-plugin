@@ -7,12 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static util.UML2TestUtil.createPackage;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.Relationship;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -49,14 +45,11 @@ public class PackageConverterTest {
 
     private PackageConverter converter;
 
-    private Map<String, Relationship> relationships;
-
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
-        relationships = new HashMap<String, Relationship>();
-        converter = new PackageConverter(relationships, util, helper);
+        converter = new PackageConverter(util, helper);
     }
 
     @Test
@@ -92,25 +85,4 @@ public class PackageConverterTest {
         assertThat(converted,is(notNullValue()));
     }
     
-    @Test
-    public void convertWithPackageImport() throws Exception {
-        Package target = createPackage("dummy");
-        Package imported = createPackage("imported");
-        target.createPackageImport(imported);
-        IPackage result = mock(IPackage.class);
-        when(basicModelEditor.createPackage(parentPackage, "dummy")).thenReturn(result);
-        converter.convert(parentPackage,target);
-        assertThat(relationships.size(),is(1));
-    }
-
-    @Test
-    public void convertWithPackageMerge() throws Exception {
-        Package target = createPackage("dummy");
-        Package merged = createPackage("merged");
-        target.createPackageMerge(merged);
-        IPackage result = mock(IPackage.class);
-        when(basicModelEditor.createPackage(parentPackage, "dummy")).thenReturn(result);
-        converter.convert(parentPackage,target);
-        assertThat(relationships.size(),is(1));
-    }
 }

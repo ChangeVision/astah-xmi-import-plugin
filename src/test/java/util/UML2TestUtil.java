@@ -32,6 +32,7 @@ import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.State;
 import org.eclipse.uml2.uml.StateMachine;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.Usage;
@@ -199,6 +200,12 @@ public class UML2TestUtil {
         TemplateSignature signature = instance.createTemplateSignature();
         return signature;
     }
+    
+    public static TemplateBinding createTemplateBinding(){
+        TemplateBinding binding = instance.createTemplateBinding();
+        return binding;
+    }
+    
     
     public static Activity createActivity(String name){
        Activity activity = instance.createActivity();

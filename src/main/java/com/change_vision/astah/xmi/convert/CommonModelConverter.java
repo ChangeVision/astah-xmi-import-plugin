@@ -1,7 +1,5 @@
 package com.change_vision.astah.xmi.convert;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.uml2.uml.Element;
@@ -10,18 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.astah.xmi.convert.model.ClassConverter;
-import com.change_vision.astah.xmi.convert.model.DataTypeConverter;
-import com.change_vision.astah.xmi.convert.model.InterfaceConverter;
 import com.change_vision.astah.xmi.convert.model.ModelConverter;
-import com.change_vision.astah.xmi.convert.model.PackageConverter;
-import com.change_vision.astah.xmi.convert.relationship.AssociationClassConverter;
-import com.change_vision.astah.xmi.convert.relationship.AssociationConverter;
-import com.change_vision.astah.xmi.convert.relationship.DependencyConverter;
-import com.change_vision.astah.xmi.convert.relationship.GeneralizationConverter;
-import com.change_vision.astah.xmi.convert.relationship.RealizationConverter;
+import com.change_vision.astah.xmi.convert.model.ModelConverters;
 import com.change_vision.astah.xmi.convert.relationship.RelationshipConverter;
-import com.change_vision.astah.xmi.convert.relationship.UsageConverter;
+import com.change_vision.astah.xmi.convert.relationship.RelationshipConverters;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.INamedElement;
@@ -34,24 +24,13 @@ public class CommonModelConverter {
     
     private Map<Element, IElement> converteds;
     private Map<String, Relationship> relationships;
-    private final List<RelationshipConverter> relationshipConverters = new ArrayList<RelationshipConverter>();
-    private final List<ModelConverter> modelConverters = new ArrayList<ModelConverter>();
+    private final RelationshipConverters relationshipConverters = new RelationshipConverters();
+    private final ModelConverters modelConverters = new ModelConverters();
 
     public CommonModelConverter(ConvertHelper helper, Map<Element, IElement> converteds, Map<String, Relationship> relationships,AstahAPIUtil util) {
         this.converteds = converteds;
         this.relationships = relationships;
-        
-        this.relationshipConverters.add(new GeneralizationConverter(util, helper));
-        this.relationshipConverters.add(new RealizationConverter(util, helper));
-        this.relationshipConverters.add(new UsageConverter(util, helper));
-        this.relationshipConverters.add(new DependencyConverter(util, helper));
-        this.relationshipConverters.add(new AssociationConverter(util, helper));
-        this.relationshipConverters.add(new AssociationClassConverter(util, helper));
-        
-        this.modelConverters.add(new PackageConverter(relationships, util, helper));
-        this.modelConverters.add(new ClassConverter(relationships, util, helper));
-        this.modelConverters.add(new InterfaceConverter(relationships, util, helper));
-        this.modelConverters.add(new DataTypeConverter(relationships, util, helper));
+                
     }
     
     public void convert(INamedElement astahElement, Element parent) throws InvalidEditingException, ClassNotFoundException {
@@ -65,23 +44,9 @@ public class CommonModelConverter {
             INamedElement newUMLModel = null;
             try {
                 if (uml2Element instanceof Relationship){
-//                    boolean remember = true;
-//                    if (uml2Element instanceof Association) {
-//                        Association association = (Association) uml2Element;
-//                        if (association.getMemberEnds().isEmpty()) {
-//                            remember = false;
-//                        }
-//                    }else if (uml2Element instanceof Extend ||
-//                            uml2Element instanceof Include ||
-//                            uml2Element instanceof InformationFlow){
-//                        remember = false;
-//                    }
-//                    if(remember){
-//                        rememberRelationship(uml2Element);
-//                    }
                     Relationship relationship = (Relationship) uml2Element;
                     boolean converted = false;
-                    for (RelationshipConverter converter : relationshipConverters){
+                    for (RelationshipConverter converter : relationshipConverters.getConverters()){
                         if (converter.accepts(relationship)) {
                             rememberRelationship(relationship);
                             converted = true;
@@ -89,27 +54,23 @@ public class CommonModelConverter {
                         }
                     }
                     if(converted == false) {
-                        java.lang.Class<? extends Element> baseClass = uml2Element.getClass();
-                        String className = baseClass.getSimpleName();
-                        logger.trace("doesn't target of CommonModelConverter:{}",className);
+                        notConvertedElement(uml2Element);
                     }
                 } else {
                     boolean converted = false;
-                    for (ModelConverter converter : modelConverters) {
+                    for (ModelConverter converter : modelConverters.getConverters()) {
                         if(converter.accepts(uml2Element)){
                             newUMLModel = converter.convert(astahElement, uml2Element);
                             if(newUMLModel != null){
                                 converted = true;
+                                convert(newUMLModel,uml2Element);
                                 break;
                             }
                         }
                     }
                     if(converted == false) {
-                        java.lang.Class<? extends Element> baseClass = uml2Element.getClass();
-                        String className = baseClass.getSimpleName();
-                        logger.trace("doesn't target of CommonModelConverter:{}",className);
+                        notConvertedElement(uml2Element);
                     }
-                    
                 }
             } catch (InvalidEditingException ex) {
                 logger.error("Exception by InvalidEditing", ex);
@@ -121,6 +82,12 @@ public class CommonModelConverter {
             convert(newUMLModel, uml2Element);
         }
 
+    }
+
+    private void notConvertedElement(Element uml2Element) {
+        java.lang.Class<? extends Element> baseClass = uml2Element.getClass();
+        String className = baseClass.getSimpleName();
+        logger.trace("doesn't target of CommonModelConverter:{}",className);
     }
     
     private void rememberRelationship(Element e) {
