@@ -116,7 +116,7 @@ public class XmiToAstah {
 
 	private void convertFeatures() throws ClassNotFoundException,
 			InvalidEditingException, ProjectNotFoundException {
-		FeatureConverter converter = new FeatureConverter(converteds,apiUtil);
+		FeatureModelConverter converter = new FeatureModelConverter(converteds,apiUtil);
 		// create attributes and operations
 		for (Element e : converteds.keySet().toArray(new Element[0])) {
 			if (e instanceof Classifier && converteds.get(e) instanceof IClass) {

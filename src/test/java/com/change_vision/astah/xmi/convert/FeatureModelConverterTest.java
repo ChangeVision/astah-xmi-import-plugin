@@ -31,7 +31,7 @@ import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IOperation;
 import com.change_vision.jude.api.inf.model.IParameter;
 
-public class FeatureConverterTest {
+public class FeatureModelConverterTest {
     
     @Mock
     private AstahAPIUtil util;
@@ -51,7 +51,7 @@ public class FeatureConverterTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void convertWithNull() throws InvalidEditingException {
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(null);
     }
     
@@ -59,7 +59,7 @@ public class FeatureConverterTest {
     public void convertCantRegisteredClassifier() throws Exception {
         Classifier classifier = mock(Classifier.class);
         
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(classifier);
     }
     
@@ -69,7 +69,7 @@ public class FeatureConverterTest {
         IClass clazz = mock(IClass.class);
         converteds.put(classifier,clazz);
         
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(classifier);
         
         assertThat(converteds.size(),is(1));
@@ -91,7 +91,7 @@ public class FeatureConverterTest {
         IAttribute attribute = mock(IAttribute.class);
         when(basicModelEditor.createAttribute(clazz, "attr", "int")).thenReturn(attribute);
         
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(classifier);
         
         assertThat(converteds.size(),is(3));        
@@ -110,7 +110,7 @@ public class FeatureConverterTest {
         IAttribute attribute = mock(IAttribute.class);
         when(basicModelEditor.createAttribute(eq(clazz), anyString(), eq(clazz))).thenReturn(attribute);
         
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(enumeration);
         
         assertThat(converteds.size(),is(3));        
@@ -129,7 +129,7 @@ public class FeatureConverterTest {
         IOperation operation = mock(IOperation.class);
         when(basicModelEditor.createOperation(eq(clazz), anyString(), eq("void"))).thenReturn(operation);
 
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(classifier);
         
         assertThat(converteds.size(),is(2));
@@ -152,7 +152,7 @@ public class FeatureConverterTest {
         IOperation operation = mock(IOperation.class);
         when(basicModelEditor.createOperation(eq(clazz), anyString(), eq("void"))).thenReturn(operation);
 
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(classifier);
         
         assertThat(converteds.size(),is(3));
@@ -179,7 +179,7 @@ public class FeatureConverterTest {
         IParameter parameter = mock(IParameter.class);
         when(basicModelEditor.createParameter(operation, "param", "void")).thenReturn(parameter);
 
-        FeatureConverter converter = new FeatureConverter(converteds, util);
+        FeatureModelConverter converter = new FeatureModelConverter(converteds, util);
         converter.convert(classifier);
         assertThat(converteds.size(),is(3));
     }
