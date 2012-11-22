@@ -14,6 +14,7 @@ import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
+import com.change_vision.jude.api.inf.model.INamedElement;
 
 public class UsageConverter implements RelationshipConverter {
 
@@ -36,11 +37,16 @@ public class UsageConverter implements RelationshipConverter {
             throw new IllegalArgumentException(format("target relathionship isn't Usage",relationship));
         }
         Usage usage = (Usage) relationship;
-        IClass supplier = getSupplier(usage);
+        INamedElement supplier = getSupplier(usage);
         if (supplier == null) return null;
-        IClass client = getClient(usage);
+        INamedElement client = getClient(usage);
         if (client == null) return null;
-        return getBasicModelEditor().createUsage(client, supplier, getName(usage));
+        if ((supplier instanceof IClass) && (client instanceof IClass)) {
+            IClass classSupplier = (IClass) supplier;
+            IClass classClient = (IClass) client;
+            return getBasicModelEditor().createUsage(classClient, classSupplier, getName(usage));
+        }
+        return getBasicModelEditor().createDependency(supplier, client, getName(usage));
     }
 
     private String getName(Usage usage) {
@@ -53,20 +59,20 @@ public class UsageConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private IClass getSupplier(Usage usage) {
+    private INamedElement getSupplier(Usage usage) {
         NamedElement sourceElement = usage.getSuppliers().get(0);
         IElement source = converteds.get(sourceElement);
-        if (source instanceof IClass) {
-            return (IClass) source;
+        if (source instanceof INamedElement) {
+            return (INamedElement) source;
         }
         return null;
     }
 
-    private IClass getClient(Usage usage) {
+    private INamedElement getClient(Usage usage) {
         NamedElement targetElement = usage.getClients().get(0);
         IElement target = converteds.get(targetElement);
-        if (target instanceof IClass) {
-            return (IClass) target;
+        if (target instanceof INamedElement) {
+            return (INamedElement) target;
         }
         return null;
     }

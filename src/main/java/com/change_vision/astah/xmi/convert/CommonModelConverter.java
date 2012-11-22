@@ -64,8 +64,6 @@ public class CommonModelConverter {
                             newUMLModel = converter.convert(astahElement, uml2Element);
                             if(newUMLModel != null){
                                 converted = true;
-                                convert(newUMLModel,uml2Element);
-                                break;
                             }
                         }
                     }

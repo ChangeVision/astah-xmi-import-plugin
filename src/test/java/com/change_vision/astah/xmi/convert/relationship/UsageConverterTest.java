@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Relationship;
 import org.eclipse.uml2.uml.Usage;
 import org.junit.Before;
@@ -22,12 +23,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.astah.xmi.convert.RelationConverter;
 import com.change_vision.astah.xmi.convert.UMLUtil;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
+import com.change_vision.jude.api.inf.model.IDependency;
 import com.change_vision.jude.api.inf.model.IElement;
-import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IUsage;
 
@@ -38,12 +38,6 @@ public class UsageConverterTest {
 
     @Mock
     private BasicModelEditor basicModelEditor;
-
-    @Mock
-    private IPackage parentPackage;
-    
-    @Mock
-    private IClass parentClass;
 
     @Mock
     private Classifier sourceClassifier;
@@ -57,6 +51,18 @@ public class UsageConverterTest {
     @Mock
     private IClass targetClassifierConvertedElement;
 
+    @Mock
+    private Package sourcePackage;
+    
+    @Mock
+    private IPackage sourcePackageConvertedElement;
+
+    @Mock
+    private Package targetPackage;
+    
+    @Mock
+    private IPackage targetPackageConvertedElement;
+    
     private UsageConverter converter;
 
     private HashMap<Element, IElement> converteds;
@@ -121,7 +127,7 @@ public class UsageConverterTest {
     }
 
     @Test
-    public void convertUsage() throws Exception {
+    public void convertClassifierUsage() throws Exception {
         converteds.put(sourceClassifier, sourceClassifierConvertedElement);
         converteds.put(targetClassifier, targetClassifierConvertedElement);
 
@@ -136,8 +142,27 @@ public class UsageConverterTest {
         IUsage created = mock(IUsage.class);
         when(basicModelEditor.createUsage(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(usage);
+        IElement element = converter.convert(usage);
+        assertThat(element,is(notNullValue()));
+    }
+
+    @Test
+    public void convertPackageUsage() throws Exception {
+        converteds.put(sourcePackage, sourcePackageConvertedElement);
+        converteds.put(targetPackage, targetPackageConvertedElement);
+
+        Usage usage = mock(Usage.class);
+        EList<NamedElement> suppliers = mock(EList.class);
+        when(suppliers.get(0)).thenReturn(sourcePackage);
+        when(usage.getSuppliers()).thenReturn(suppliers);
+        EList<NamedElement> clients = mock(EList.class);
+        when(clients.get(0)).thenReturn(targetPackage);
+        when(usage.getClients()).thenReturn(clients);
+        
+        IDependency created = mock(IDependency.class);
+        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), anyString())).thenReturn(created);
+        
+        IElement element = converter.convert(usage);
         assertThat(element,is(notNullValue()));
     }
 
