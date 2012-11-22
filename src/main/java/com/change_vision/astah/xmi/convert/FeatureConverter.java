@@ -3,7 +3,6 @@ package com.change_vision.astah.xmi.convert;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Constraint;
 import org.eclipse.uml2.uml.DataType;
@@ -20,11 +19,13 @@ import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.TypedElement;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
+import com.change_vision.astah.xmi.convert.model.AttributeConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
+import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IOperation;
 import com.change_vision.jude.api.inf.model.IParameter;
 
@@ -53,27 +54,11 @@ public class FeatureConverter {
                 converteds.put(literal, astahAttribute);
             }
         }
+        AttributeConverter converter = new AttributeConverter(converteds, apiUtil);
         for (Property prop : cls.getAttributes()) {
-            if (prop.getAssociation() == null) {
-                IAttribute astahAttribute = getBasicModelEditor().createAttribute(
-                        astahClass, prop.getName(), DEFAULT_ATTRIUBTE_TYPE);
-                try {
-                    String expression = getQualifiedTypeExpression(prop);
-                    astahAttribute.setQualifiedTypeExpression(expression);
-                } catch (InvalidEditingException ex) {
-                    //do nothing, just use default type "int" when failed.
-                }
-                astahAttribute.setStatic(prop.isStatic());
-                astahAttribute.setChangeable(prop.isReadOnly());
-                if (prop.isComposite()) {
-                    astahAttribute.setComposite();
-                } else if (prop.getAggregation().equals(
-                        AggregationKind.SHARED)) {
-                    astahAttribute.setAggregation();
-                }
-                astahAttribute.setDerived(prop.isDerived());
-                astahAttribute.setInitialValue(prop.getDefault());
-                converteds.put(prop, astahAttribute);
+            INamedElement convert = converter.convert(prop, astahClass);
+            if (convert != null) {
+                converteds.put(prop, convert);                
             }
         }
         for (Operation op : cls.getOperations()) {

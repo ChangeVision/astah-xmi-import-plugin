@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.convert.ConvertHelper;
-import com.change_vision.astah.xmi.convert.exception.NotForUseException;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IModel;
@@ -65,11 +64,6 @@ public class PackageConverterTest {
         assertThat(result,is(true));
     }
     
-    @Test(expected = NotForUseException.class)
-    public void singleArgIsNotForUse() throws Exception {
-        converter.convert(null);
-    }
-
     @Test(expected=IllegalArgumentException.class)
     public void notConvertWithClassParent() throws Exception {
         Element target = createPackage("dummy");

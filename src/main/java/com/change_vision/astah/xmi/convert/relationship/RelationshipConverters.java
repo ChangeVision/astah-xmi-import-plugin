@@ -16,14 +16,14 @@ public class RelationshipConverters {
     
     public RelationshipConverters(Map<Element, IElement> converteds, AstahAPIUtil util){
         this.converters.add(new GeneralizationConverter(converteds, util));
-        this.converters.add(new RealizationConverter(converteds, util));
         this.converters.add(new UsageConverter(converteds, util));
+        this.converters.add(new RealizationConverter(converteds, util));
         this.converters.add(new DependencyConverter(converteds, util));
         this.converters.add(new AssociationClassConverter(converteds, util));
         this.converters.add(new AssociationConverter(converteds,util));
         this.converters.add(new PackageImportConverter(converteds, util));
         this.converters.add(new PackageMergeConverter(converteds, util));
-        this.converters.add(new TemplateBindingConverter(converteds, util));
+//        this.converters.add(new TemplateBindingConverter(converteds, util));
     }
     
     public List<RelationshipConverter> getConverters() {

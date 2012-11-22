@@ -62,7 +62,6 @@ public class AssociationClassConverterTest {
     @Mock
     private IClass targetClassifierConvertedElement;
 
-
     private AssociationClassConverter converter;
     
     private HashMap<Element, IElement> converteds;

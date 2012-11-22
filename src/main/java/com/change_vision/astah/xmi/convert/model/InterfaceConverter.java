@@ -7,13 +7,12 @@ import org.eclipse.uml2.uml.Interface;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.convert.ConvertHelper;
-import com.change_vision.astah.xmi.convert.exception.NotForUseException;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 
-public class InterfaceConverter implements ModelConverter {
+public class InterfaceConverter implements ClassifierConverter {
     
     private UniqueNameCreator uniqueNameCreator = new UniqueNameCreator();
     private AstahAPIUtil apiUtil;
@@ -27,11 +26,6 @@ public class InterfaceConverter implements ModelConverter {
     @Override
     public boolean accepts(Element element) {
         return element instanceof Interface;
-    }
-
-    @Override
-    public IClass convert(Element element) {
-        throw new NotForUseException();
     }
     
     @Override

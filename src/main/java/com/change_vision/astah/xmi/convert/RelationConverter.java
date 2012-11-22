@@ -26,8 +26,10 @@ public class RelationConverter {
         for (RelationshipConverter converter : converters.getConverters()) {
             if (converter.accepts(rel)) {
                 IElement converted = converter.convert(rel);
-                if(converted != null) converteds.put(rel, converted);
-                return (INamedElement)converted;                
+                if(converted != null){ 
+                    converteds.put(rel, converted);
+                    return (INamedElement)converted;                
+                }
             }
         }
         return null;

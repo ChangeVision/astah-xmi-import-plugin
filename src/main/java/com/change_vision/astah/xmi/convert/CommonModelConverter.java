@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
+import com.change_vision.astah.xmi.convert.model.ClassifierConverter;
 import com.change_vision.astah.xmi.convert.model.ClassifierModelConverters;
-import com.change_vision.astah.xmi.convert.model.ModelConverter;
 import com.change_vision.astah.xmi.convert.relationship.RelationshipConverter;
 import com.change_vision.astah.xmi.convert.relationship.RelationshipConverters;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
@@ -59,7 +59,7 @@ public class CommonModelConverter {
                     }
                 } else {
                     boolean converted = false;
-                    for (ModelConverter converter : modelConverters.getConverters()) {
+                    for (ClassifierConverter converter : modelConverters.getConverters()) {
                         if(converter.accepts(uml2Element)){
                             newUMLModel = converter.convert(astahElement, uml2Element);
                             if(newUMLModel != null){

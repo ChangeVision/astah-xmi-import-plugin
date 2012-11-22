@@ -7,9 +7,9 @@ import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.INamedElement;
 
 /**
- * convert UML2 to Astah model interface
+ * convert UML2 Classifier element to Astah model interface
  */
-public interface ModelConverter {
+public interface ClassifierConverter {
     
     /**
      * accepts UML2 element 
@@ -17,15 +17,7 @@ public interface ModelConverter {
      * @return true: accepted by the converter
      */
     public boolean accepts(Element element);
-    
-    /**
-     * convert the element to Astah model
-     * @param element
-     * @return
-     * @throws InvalidEditingException
-     */
-    public INamedElement convert(Element element) throws InvalidEditingException;
-    
+        
     /**
      * convert the element to Astah model
      * @param parent the model of parent in Astah

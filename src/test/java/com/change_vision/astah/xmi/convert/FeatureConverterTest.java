@@ -18,7 +18,6 @@ import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Type;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -97,33 +96,6 @@ public class FeatureConverterTest {
         
         assertThat(converteds.size(),is(3));        
         verify(attribute).setQualifiedTypeExpression("dummy");
-    }
-    
-    @Test
-    @Ignore(value="対応必要")
-    public void convertSameNamePropertyToAttribute() throws Exception {
-        Class classifier = createClass("classifier");
-        Class dummy = createClass("dummy");
-        classifier.createOwnedAttribute("attr", dummy);
-        classifier.createOwnedAttribute("attr", dummy);
-        
-        IClass clazz = mock(IClass.class);
-        converteds.put(classifier,clazz);
-        IClass dummyClazz = mock(IClass.class);
-        when(dummyClazz.getName()).thenReturn("dummy");
-        when(dummyClazz.getFullName("::")).thenReturn("dummy");
-        converteds.put(dummy,dummyClazz);
-        
-        IAttribute attribute = mock(IAttribute.class);
-        when(basicModelEditor.createAttribute(clazz, "attr", "int")).thenReturn(attribute);
-        
-        FeatureConverter converter = new FeatureConverter(converteds, util);
-        converter.convert(classifier);
-        
-        assertThat(converteds.size(),is(4));
-        verify(basicModelEditor).createAttribute(clazz, "attr", "int");
-        verify(basicModelEditor).createAttribute(clazz, "attr0", "int");
-        verify(attribute,times(2)).setQualifiedTypeExpression("dummy");        
     }
     
     @Test

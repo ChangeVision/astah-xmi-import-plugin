@@ -9,7 +9,7 @@ import com.change_vision.astah.xmi.convert.ConvertHelper;
 
 public class ClassifierModelConverters {
 
-    private List<ModelConverter> converters = new ArrayList<ModelConverter>();
+    private List<ClassifierConverter> converters = new ArrayList<ClassifierConverter>();
     
     public ClassifierModelConverters(AstahAPIUtil util, ConvertHelper helper){
         this.converters.add(new PackageConverter(util, helper));
@@ -18,7 +18,7 @@ public class ClassifierModelConverters {
         this.converters.add(new DataTypeConverter(util, helper));
     }
     
-    public List<ModelConverter> getConverters() {
+    public List<ClassifierConverter> getConverters() {
         return Collections.unmodifiableList(converters);
     }
 }

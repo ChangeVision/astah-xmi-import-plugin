@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.convert.ConvertHelper;
-import com.change_vision.astah.xmi.convert.exception.NotForUseException;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -58,11 +57,6 @@ public class InterfaceConverterTest {
         Element target = createInterface("dummy");
         boolean result = converter.accepts(target);
         assertThat(result,is(true));                
-    }
-    
-    @Test(expected=NotForUseException.class)
-    public void singleArgIsNotForUse() throws Exception {
-        converter.convert(null);
     }
     
     @Test
