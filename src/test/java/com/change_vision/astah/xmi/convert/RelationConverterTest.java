@@ -45,6 +45,7 @@ import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IRealization;
+import com.change_vision.jude.api.inf.model.ITemplateBinding;
 import com.change_vision.jude.api.inf.model.IUsage;
 
 public class RelationConverterTest {
@@ -62,28 +63,28 @@ public class RelationConverterTest {
     private BasicModelEditor basicModelEditor;
 
     @Mock
-    private Classifier dummySourceClassifier;
+    private Classifier sourceClassifier;
     
     @Mock
-    private IClass dummySourceClassifierConvertedElement;
+    private IClass sourceClassifierConvertedElement;
 
     @Mock
-    private Classifier dummyTargetClassifier;
+    private Classifier targetClassifier;
     
     @Mock
-    private IClass dummyTargetClassifierConvertedElement;
+    private IClass targetClassifierConvertedElement;
     
     @Mock
-    private Package dummySourcePackage;
+    private Package sourcePackage;
     
     @Mock
-    private IPackage dummySourcePackageConvertedElement;
+    private IPackage sourcePackageConvertedElement;
 
     @Mock
-    private Package dummyTargetPackage;
+    private Package targetPackage;
     
     @Mock
-    private IPackage dummyTargetPackageConvertedElement;
+    private IPackage targetPackageConvertedElement;
     
     private HashMap<Element, IElement> converteds;
 
@@ -104,9 +105,9 @@ public class RelationConverterTest {
     
     @Test
     public void notConvertNotHaveTarget() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
         Generalization generalization = mock(Generalization.class);
-        when(generalization.getSpecific()).thenReturn(dummySourceClassifier);
+        when(generalization.getSpecific()).thenReturn(sourceClassifier);
         
         assertThat(UMLUtil.getSource(generalization),is(notNullValue()));
         assertThat(UMLUtil.getTarget(generalization),is(nullValue()));
@@ -118,9 +119,9 @@ public class RelationConverterTest {
     
     @Test
     public void notConvertNotHaveSource() throws Exception {
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
         Generalization generalization = mock(Generalization.class);
-        when(generalization.getGeneral()).thenReturn(dummyTargetClassifier);
+        when(generalization.getGeneral()).thenReturn(targetClassifier);
         
         assertThat(UMLUtil.getSource(generalization),is(nullValue()));
         assertThat(UMLUtil.getTarget(generalization),is(notNullValue()));
@@ -132,14 +133,14 @@ public class RelationConverterTest {
     
     @Test
     public void convertGeneralization() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
         Generalization generalization = mock(Generalization.class);
-        when(generalization.getSpecific()).thenReturn(dummySourceClassifier);
-        when(generalization.getGeneral()).thenReturn(dummyTargetClassifier);
+        when(generalization.getSpecific()).thenReturn(sourceClassifier);
+        when(generalization.getGeneral()).thenReturn(targetClassifier);
         
         IGeneralization created = mock(IGeneralization.class);
-        when(basicModelEditor.createGeneralization(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), anyString())).thenReturn(created);
+        when(basicModelEditor.createGeneralization(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
         RelationConverter converter = new RelationConverter(converteds, util);
         INamedElement element = converter.convert(generalization);
@@ -148,18 +149,18 @@ public class RelationConverterTest {
 
     @Test
     public void convertRealization() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
         Realization realization = mock(Realization.class);
         EList<NamedElement> clients = mock(EList.class);
-        when(clients.get(0)).thenReturn(dummySourceClassifier);
+        when(clients.get(0)).thenReturn(sourceClassifier);
         when(realization.getClients()).thenReturn(clients);
         EList<NamedElement> suppliers = mock(EList.class);
-        when(suppliers.get(0)).thenReturn(dummyTargetClassifier);
+        when(suppliers.get(0)).thenReturn(targetClassifier);
         when(realization.getSuppliers()).thenReturn(suppliers);
         
         IRealization created = mock(IRealization.class);
-        when(basicModelEditor.createRealization(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), anyString())).thenReturn(created);
+        when(basicModelEditor.createRealization(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
         RelationConverter converter = new RelationConverter(converteds, util);
         INamedElement element = converter.convert(realization);
@@ -168,19 +169,19 @@ public class RelationConverterTest {
     
     @Test
     public void convertUsage() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
 
         Usage usage = mock(Usage.class);
         EList<NamedElement> clients = mock(EList.class);
-        when(clients.get(0)).thenReturn(dummySourceClassifier);
+        when(clients.get(0)).thenReturn(sourceClassifier);
         when(usage.getClients()).thenReturn(clients);
         EList<NamedElement> suppliers = mock(EList.class);
-        when(suppliers.get(0)).thenReturn(dummyTargetClassifier);
+        when(suppliers.get(0)).thenReturn(targetClassifier);
         when(usage.getSuppliers()).thenReturn(suppliers);
         
         IUsage created = mock(IUsage.class);
-        when(basicModelEditor.createUsage(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), anyString())).thenReturn(created);
+        when(basicModelEditor.createUsage(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
         RelationConverter converter = new RelationConverter(converteds, util);
         INamedElement element = converter.convert(usage);
@@ -189,8 +190,8 @@ public class RelationConverterTest {
     
     @Test
     public void convertAssociation() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
 
         Association association = mock(Association.class);
         when(association.isSetName()).thenReturn(true);
@@ -199,12 +200,12 @@ public class RelationConverterTest {
         Property sourceProperty = mock(Property.class);
         when(sourceProperty.getName()).thenReturn("dummySource");
         when(sourceProperty.isSetName()).thenReturn(true);
-        when(sourceProperty.getType()).thenReturn(dummySourceClassifier);
+        when(sourceProperty.getType()).thenReturn(sourceClassifier);
 
         Property targetProperty = mock(Property.class);
         when(targetProperty.getName()).thenReturn("dummyTarget");
         when(targetProperty.isSetName()).thenReturn(true);
-        when(targetProperty.getType()).thenReturn(dummyTargetClassifier);
+        when(targetProperty.getType()).thenReturn(targetClassifier);
 
         EList<Property> members = mock(EList.class);
         when(members.get(0)).thenReturn(sourceProperty);
@@ -221,7 +222,7 @@ public class RelationConverterTest {
         };
         
         when(created.getMemberEnds()).thenReturn(attributes );
-        when(basicModelEditor.createAssociation(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
+        when(basicModelEditor.createAssociation(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
         
         RelationConverter converter = new RelationConverter(converteds, util);
         assertThat(converteds.containsValue(sourceAttribute),is(false));
@@ -234,8 +235,8 @@ public class RelationConverterTest {
 
     @Test
     public void convertAssociationClass() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
 
         AssociationClass association = mock(AssociationClass.class);
         when(association.isSetName()).thenReturn(true);
@@ -244,12 +245,12 @@ public class RelationConverterTest {
         Property sourceProperty = mock(Property.class);
         when(sourceProperty.getName()).thenReturn("dummySource");
         when(sourceProperty.isSetName()).thenReturn(true);
-        when(sourceProperty.getType()).thenReturn(dummySourceClassifier);
+        when(sourceProperty.getType()).thenReturn(sourceClassifier);
 
         Property targetProperty = mock(Property.class);
         when(targetProperty.getName()).thenReturn("dummyTarget");
         when(targetProperty.isSetName()).thenReturn(true);
-        when(targetProperty.getType()).thenReturn(dummyTargetClassifier);
+        when(targetProperty.getType()).thenReturn(targetClassifier);
 
         EList<Property> members = mock(EList.class);
         when(members.get(0)).thenReturn(sourceProperty);
@@ -266,7 +267,7 @@ public class RelationConverterTest {
         };
         
         when(created.getMemberEnds()).thenReturn(attributes );
-        when(basicModelEditor.createAssociationClass(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
+        when(basicModelEditor.createAssociationClass(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
         
         RelationConverter converter = new RelationConverter(converteds, util);
 
@@ -282,55 +283,55 @@ public class RelationConverterTest {
     
     @Test
     public void convertPackageImport() throws Exception {
-        converteds.put(dummySourcePackage, dummySourcePackageConvertedElement);
-        converteds.put(dummyTargetPackage, dummyTargetPackageConvertedElement);
+        converteds.put(sourcePackage, sourcePackageConvertedElement);
+        converteds.put(targetPackage, targetPackageConvertedElement);
 
         IDependency created = mock(IDependency.class);
-        when(basicModelEditor.createDependency(eq(dummySourcePackageConvertedElement), eq(dummyTargetPackageConvertedElement), eq(""))).thenReturn(created );
+        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq(""))).thenReturn(created );
 
         RelationConverter converter = new RelationConverter(converteds, util);
         PackageImport rel = mock(PackageImport.class);
-        when(rel.getImportedPackage()).thenReturn(dummySourcePackage);
-        when(rel.getImportingNamespace()).thenReturn(dummyTargetPackage);
+        when(rel.getImportedPackage()).thenReturn(sourcePackage);
+        when(rel.getImportingNamespace()).thenReturn(targetPackage);
         INamedElement element = converter.convert(rel);
         assertThat(element,is(notNullValue()));        
     }
     
     @Test
     public void convertPackageMerge() throws Exception {
-        converteds.put(dummySourcePackage, dummySourcePackageConvertedElement);
-        converteds.put(dummyTargetPackage, dummyTargetPackageConvertedElement);
+        converteds.put(sourcePackage, sourcePackageConvertedElement);
+        converteds.put(targetPackage, targetPackageConvertedElement);
 
         IDependency created = mock(IDependency.class);
-        when(basicModelEditor.createDependency(eq(dummySourcePackageConvertedElement), eq(dummyTargetPackageConvertedElement), eq(""))).thenReturn(created );
+        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq(""))).thenReturn(created );
 
         RelationConverter converter = new RelationConverter(converteds, util);
         PackageMerge rel = mock(PackageMerge.class);
-        when(rel.getMergedPackage()).thenReturn(dummySourcePackage);
-        when(rel.getReceivingPackage()).thenReturn(dummyTargetPackage);
+        when(rel.getMergedPackage()).thenReturn(sourcePackage);
+        when(rel.getReceivingPackage()).thenReturn(targetPackage);
         INamedElement element = converter.convert(rel);
         assertThat(element,is(notNullValue()));        
     }
     
     @Test
     public void convertDependency() throws Exception {
-        converteds.put(dummySourcePackage, dummySourcePackageConvertedElement);
-        converteds.put(dummyTargetPackage, dummyTargetPackageConvertedElement);
+        converteds.put(sourcePackage, sourcePackageConvertedElement);
+        converteds.put(targetPackage, targetPackageConvertedElement);
 
         Dependency dependency = mock(Dependency.class);
         when(dependency.getName()).thenReturn("dependency");
         when(dependency.isSetName()).thenReturn(true);
 
         EList<NamedElement> clients = mock(EList.class);
-        when(clients.get(0)).thenReturn(dummyTargetPackage);
+        when(clients.get(0)).thenReturn(targetPackage);
         when(dependency.getClients()).thenReturn(clients);
         
         EList<NamedElement> suppliers = mock(EList.class);
-        when(suppliers.get(0)).thenReturn(dummySourcePackage);
+        when(suppliers.get(0)).thenReturn(sourcePackage);
         when(dependency.getSuppliers()).thenReturn(suppliers);
 
         IDependency created = mock(IDependency.class);
-        when(basicModelEditor.createDependency(eq(dummySourcePackageConvertedElement), eq(dummyTargetPackageConvertedElement), eq("dependency"))).thenReturn(created );
+        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq("dependency"))).thenReturn(created );
 
         RelationConverter converter = new RelationConverter(converteds, util);
         INamedElement element = converter.convert(dependency);
@@ -338,43 +339,43 @@ public class RelationConverterTest {
     }
     
     @Test
-    public void notConvertTemplateBinding() throws Exception {
-        converteds.put(dummySourceClassifier, dummySourceClassifierConvertedElement);
-        converteds.put(dummyTargetClassifier, dummyTargetClassifierConvertedElement);
+    public void convertTemplateBinding() throws Exception {
+        converteds.put(sourceClassifier, sourceClassifierConvertedElement);
+        converteds.put(targetClassifier, targetClassifierConvertedElement);
         TemplateBinding binding = mock(TemplateBinding.class);
-        when(binding.getBoundElement()).thenReturn(dummySourceClassifier);
+        when(binding.getBoundElement()).thenReturn(sourceClassifier);
         TemplateSignature signature = mock(TemplateSignature.class);
-        when(signature.getTemplate()).thenReturn(dummyTargetClassifier);
+        when(signature.getTemplate()).thenReturn(targetClassifier);
         when(binding.getSignature()).thenReturn(signature );
         
-        IGeneralization created = mock(IGeneralization.class);
-        when(basicModelEditor.createGeneralization(eq(dummySourceClassifierConvertedElement), eq(dummyTargetClassifierConvertedElement), anyString())).thenReturn(created);
+        ITemplateBinding created = mock(ITemplateBinding.class);
+        when(basicModelEditor.createTemplateBinding(sourceClassifierConvertedElement, targetClassifierConvertedElement)).thenReturn(created);
         
         RelationConverter converter = new RelationConverter(converteds, util);
         INamedElement element = converter.convert(binding);
-        assertThat(element,is(nullValue()));
+        assertThat(element,is(notNullValue()));
     }
 
     
     @Test
     public void notConvertInformationFlow() throws Exception {
-        converteds.put(dummySourcePackage, dummySourcePackageConvertedElement);
-        converteds.put(dummyTargetPackage, dummyTargetPackageConvertedElement);
+        converteds.put(sourcePackage, sourcePackageConvertedElement);
+        converteds.put(targetPackage, targetPackageConvertedElement);
 
         InformationFlow flow = mock(InformationFlow.class);
 
         EList<NamedElement> sources = mock(EList.class);
         when(sources.isEmpty()).thenReturn(false);
-        when(sources.get(0)).thenReturn(dummySourcePackage);
+        when(sources.get(0)).thenReturn(sourcePackage);
         when(flow.getInformationSources()).thenReturn(sources);
 
         EList<NamedElement> targets = mock(EList.class);
         when(targets.isEmpty()).thenReturn(false);
-        when(targets.get(0)).thenReturn(dummyTargetPackage);
+        when(targets.get(0)).thenReturn(targetPackage);
         when(flow.getInformationTargets()).thenReturn(targets);
 
         IDependency created = mock(IDependency.class);
-        when(basicModelEditor.createDependency(eq(dummySourcePackageConvertedElement), eq(dummyTargetPackageConvertedElement), eq(""))).thenReturn(created);
+        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq(""))).thenReturn(created);
 
         RelationConverter converter = new RelationConverter(converteds, util);
         INamedElement element = converter.convert(flow);

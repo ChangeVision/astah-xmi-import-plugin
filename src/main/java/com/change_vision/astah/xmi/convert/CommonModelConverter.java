@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
+import com.change_vision.astah.xmi.convert.model.ClassifierModelConverters;
 import com.change_vision.astah.xmi.convert.model.ModelConverter;
-import com.change_vision.astah.xmi.convert.model.ModelConverters;
 import com.change_vision.astah.xmi.convert.relationship.RelationshipConverter;
 import com.change_vision.astah.xmi.convert.relationship.RelationshipConverters;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
@@ -24,13 +24,14 @@ public class CommonModelConverter {
     
     private Map<Element, IElement> converteds;
     private Map<String, Relationship> relationships;
-    private final RelationshipConverters relationshipConverters = new RelationshipConverters();
-    private final ModelConverters modelConverters = new ModelConverters();
+    private final RelationshipConverters relationshipConverters;
+    private final ClassifierModelConverters modelConverters;
 
     public CommonModelConverter(ConvertHelper helper, Map<Element, IElement> converteds, Map<String, Relationship> relationships,AstahAPIUtil util) {
         this.converteds = converteds;
         this.relationships = relationships;
-                
+        this.modelConverters = new ClassifierModelConverters(util,helper);
+        this.relationshipConverters = new RelationshipConverters(converteds,util);
     }
     
     public void convert(INamedElement astahElement, Element parent) throws InvalidEditingException, ClassNotFoundException {

@@ -7,13 +7,11 @@ import java.util.List;
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.convert.ConvertHelper;
 
-public class ModelConverters {
+public class ClassifierModelConverters {
 
     private List<ModelConverter> converters = new ArrayList<ModelConverter>();
-    private AstahAPIUtil util = new AstahAPIUtil();
-    private ConvertHelper helper = new ConvertHelper();
     
-    public ModelConverters(){
+    public ClassifierModelConverters(AstahAPIUtil util, ConvertHelper helper){
         this.converters.add(new PackageConverter(util, helper));
         this.converters.add(new ClassConverter(util, helper));
         this.converters.add(new InterfaceConverter(util, helper));

@@ -3,26 +3,27 @@ package com.change_vision.astah.xmi.convert.relationship;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import org.eclipse.uml2.uml.Element;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.astah.xmi.convert.ConvertHelper;
+import com.change_vision.jude.api.inf.model.IElement;
 
 public class RelationshipConverters {
     
     private List<RelationshipConverter> converters = new ArrayList<RelationshipConverter>();
-    private AstahAPIUtil util = new AstahAPIUtil();
-    private ConvertHelper helper = new ConvertHelper();
     
-    public RelationshipConverters(){
-        this.converters.add(new GeneralizationConverter(util, helper));
-        this.converters.add(new RealizationConverter(util, helper));
-        this.converters.add(new UsageConverter(util, helper));
-        this.converters.add(new DependencyConverter(util, helper));
-        this.converters.add(new AssociationConverter(util, helper));
-        this.converters.add(new AssociationClassConverter(util, helper));
-        this.converters.add(new TemplateBindingConverter(util, helper));
-        this.converters.add(new PackageImportConverter(util, helper));
-        this.converters.add(new PackageMergeConverter(util, helper));
+    public RelationshipConverters(Map<Element, IElement> converteds, AstahAPIUtil util){
+        this.converters.add(new GeneralizationConverter(converteds, util));
+        this.converters.add(new RealizationConverter(converteds, util));
+        this.converters.add(new UsageConverter(converteds, util));
+        this.converters.add(new DependencyConverter(converteds, util));
+        this.converters.add(new AssociationClassConverter(converteds, util));
+        this.converters.add(new AssociationConverter(converteds,util));
+        this.converters.add(new PackageImportConverter(converteds, util));
+        this.converters.add(new PackageMergeConverter(converteds, util));
+        this.converters.add(new TemplateBindingConverter(converteds, util));
     }
     
     public List<RelationshipConverter> getConverters() {

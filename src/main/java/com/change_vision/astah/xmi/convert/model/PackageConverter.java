@@ -26,7 +26,7 @@ public class PackageConverter implements ModelConverter{
 
     @Override
     public boolean accepts(Element element) {
-        return element instanceof org.eclipse.uml2.uml.Package;
+        return element instanceof Package;
     }
 
     @Override
