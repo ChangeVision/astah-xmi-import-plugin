@@ -16,12 +16,16 @@ Description
 ----------------
 This plugin provides to load XMI file and import model information at class diagram.
 
-Limitations
+Notes
 ----------------
  * This plugin supports to load XMI version 2.1
  * The diagrams and presentations aren't supported by this plugin. This plugin only supports to import model information.
  * There are some notation issues if you integrate to other tools.
+
+Limitations
+----------------
  * Doesn't support to set attribute visibility. (6.6.4)
+ * Doesn't support to set TemplateBinding and TemplateParameter.
 
 How to install
 ----------------
@@ -39,6 +43,74 @@ How to use
 How to uninstall
 ------------------------
 Delete the plugin jar file at the [Astah's install folder]/plugins.
+
+Build & Testing
+-----------------
+1. Install Astah Plug-in SDK
+2. clone the source code.
+
+    git clone [Repository URL]
+
+3. Build
+
+    astah-build
+
+4. Unit Testing
+
+    astah-mvn test
+
+Extend this Plugin
+-------------------
+
+This plugin has extension point to import another model type.
+
+How to extend
+-----------------
+1. Install Astah Plug-in SDK
+2. Install this plugin to local repository.
+
+    astah-mvn install:install-file -Dfile=xmi-1.0.0.jar -DgroupId=com.change_vision.xmi -DartifactId=xmi -Dversion=1.0.0 -Dpackaging=jar -DgeneratePom=true
+
+3. Generate extension plugin.
+
+    astah-generate-plugin
+
+4. Add this plugin to extension plug-in's pom.xml.
+
+    <dependency>
+        <groupId>com.change_vision.astah</groupId>
+        <artifactId>xmi</artifactId>
+        <version>1.0.0</version>
+        <scope>provided</scope>
+    </dependency>
+    
+5. Implement converter.
+
+Case1. Classifier model like UseCase, implement ClassifierConverter. ex. com.change_vision.astah.xmi.internal.convert.model's classes
+
+Case2. Relation model like association、implement RelationConverter. ex. com.change_vision.astah.xmi.internal.convert.relationship's classes.
+
+6. Register your converters to BundleContext. BundleContext is passed by Activator's start/stop. Register like below.
+
+	import org.osgi.framework.BundleActivator;
+	import org.osgi.framework.BundleContext;
+	
+	import com.change_vision.astah.xmi.convert.model.ClassifierConverter;
+	import com.change_vision.astah.xmi.convert.relationship.RelationshipConverter;
+	
+	public class Activator implements BundleActivator {
+	
+		public void start(BundleContext context) {
+			// for Classifier
+		    context.registerService(ClassifierConverter.class.getName(), new HogeConverter(), null);
+		    // for Relationship
+		    context.registerService(RelationshipConverter.class.getName(), new FugaConverter(), null);
+		}
+	
+		public void stop(BundleContext context) {
+		}
+		
+	}
 
 License
 ---------------
