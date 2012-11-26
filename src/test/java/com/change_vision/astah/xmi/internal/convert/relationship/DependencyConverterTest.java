@@ -23,14 +23,11 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
-import com.change_vision.astah.xmi.internal.convert.RelationConverter;
 import com.change_vision.astah.xmi.internal.convert.UMLUtil;
-import com.change_vision.astah.xmi.internal.convert.relationship.DependencyConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IDependency;
 import com.change_vision.jude.api.inf.model.IElement;
-import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 
 public class DependencyConverterTest {
@@ -71,7 +68,7 @@ public class DependencyConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new DependencyConverter(converteds,util);
+        converter = new DependencyConverter(util);
     }
     
     @Test
@@ -109,7 +106,7 @@ public class DependencyConverterTest {
         assertThat(UMLUtil.getSource(dependency),is(notNullValue()));
         assertThat(UMLUtil.getTarget(dependency),is(nullValue()));
         
-        IElement element = converter.convert(dependency);
+        IElement element = converter.convert(converteds,dependency);
         assertThat(element,is(nullValue()));
     }
     
@@ -128,7 +125,7 @@ public class DependencyConverterTest {
         assertThat(UMLUtil.getSource(dependency),is(nullValue()));
         assertThat(UMLUtil.getTarget(dependency),is(notNullValue()));
         
-        IElement element = converter.convert(dependency);
+        IElement element = converter.convert(converteds,dependency);
         assertThat(element,is(nullValue()));
     }
 
@@ -142,18 +139,19 @@ public class DependencyConverterTest {
         when(dependency.isSetName()).thenReturn(true);
 
         EList<NamedElement> clients = mock(EList.class);
+        when(clients.size()).thenReturn(1);
         when(clients.get(0)).thenReturn(targetPackage);
         when(dependency.getClients()).thenReturn(clients);
         
         EList<NamedElement> suppliers = mock(EList.class);
         when(suppliers.get(0)).thenReturn(sourcePackage);
+        when(suppliers.size()).thenReturn(1);
         when(dependency.getSuppliers()).thenReturn(suppliers);
 
         IDependency created = mock(IDependency.class);
-        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq("dependency"))).thenReturn(created );
+        when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq("dependency"))).thenReturn(created);
 
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(dependency);
+        IElement element = converter.convert(converteds, dependency);
         assertThat(element,is(notNullValue()));        
     }
 

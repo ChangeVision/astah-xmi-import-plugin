@@ -21,10 +21,8 @@ import com.change_vision.jude.api.inf.model.IElement;
 public class TemplateBindingConverter implements RelationshipConverter {
 
     private AstahAPIUtil util;
-    private Map<Element, IElement> converteds;
 
-    public TemplateBindingConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public TemplateBindingConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -34,19 +32,19 @@ public class TemplateBindingConverter implements RelationshipConverter {
     }
     
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if (!(relationship instanceof TemplateBinding)) {
             throw new IllegalArgumentException(format("target relathionship isn't TemplateBinding '%s'",relationship));
         }
         TemplateBinding binding = (TemplateBinding) relationship;
-        IClass boundElement = getSource(binding);
+        IClass boundElement = getSource(converteds, binding);
         if(boundElement == null) return null;
-        IClass template = getTarget(binding);
+        IClass template = getTarget(converteds, binding);
         if(template == null) return null;
         return getBasicModelEditor().createTemplateBinding(boundElement, template);
     }
 
-    private IClass getSource(TemplateBinding binding) {
+    private IClass getSource(Map<Element, IElement> converteds,TemplateBinding binding) {
         TemplateableElement boundElemnt = binding.getBoundElement();
         if (boundElemnt instanceof Classifier) {
             Classifier clazz = (Classifier) boundElemnt;
@@ -58,7 +56,7 @@ public class TemplateBindingConverter implements RelationshipConverter {
         return null;
     }
     
-    private IClass getTarget(TemplateBinding binding) {
+    private IClass getTarget(Map<Element, IElement> converteds,TemplateBinding binding) {
         TemplateSignature signature = binding.getSignature();
         if(signature == null) return null;
         TemplateableElement template = signature.getTemplate();

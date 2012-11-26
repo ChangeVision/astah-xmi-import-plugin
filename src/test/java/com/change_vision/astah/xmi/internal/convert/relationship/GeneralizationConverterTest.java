@@ -21,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.UMLUtil;
-import com.change_vision.astah.xmi.internal.convert.relationship.GeneralizationConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -63,7 +62,7 @@ public class GeneralizationConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new GeneralizationConverter(converteds, util);
+        converter = new GeneralizationConverter(util);
     }
     
     @Test
@@ -88,7 +87,7 @@ public class GeneralizationConverterTest {
         assertThat(UMLUtil.getSource(generalization),is(notNullValue()));
         assertThat(UMLUtil.getTarget(generalization),is(nullValue()));
         
-        IElement element = converter.convert(generalization);
+        IElement element = converter.convert(converteds, generalization);
         assertThat(element,is(nullValue()));
     }
     
@@ -101,7 +100,7 @@ public class GeneralizationConverterTest {
         assertThat(UMLUtil.getSource(generalization),is(nullValue()));
         assertThat(UMLUtil.getTarget(generalization),is(notNullValue()));
         
-        IElement element = converter.convert(generalization);
+        IElement element = converter.convert(converteds, generalization);
         assertThat(element,is(nullValue()));
     }
 
@@ -117,7 +116,7 @@ public class GeneralizationConverterTest {
         IGeneralization created = mock(IGeneralization.class);
         when(basicModelEditor.createGeneralization(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        IElement element = converter.convert(generalization);
+        IElement element = converter.convert(converteds, generalization);
         assertThat(element,is(notNullValue()));
     }
 

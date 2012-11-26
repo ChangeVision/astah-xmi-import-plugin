@@ -19,7 +19,7 @@ import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.INamedElement;
 
-public class AttributeConverter implements FeatureConverter {
+public class PropertyConverter implements FeatureConverter {
 
     private static final String DEFAULT_ATTRIUBTE_TYPE = "int";
     
@@ -27,7 +27,7 @@ public class AttributeConverter implements FeatureConverter {
     private UniqueNameCreator nameCreator = new UniqueNameCreator();
     private TypeExpressionNameCreator typeNameCreator;
 
-    public AttributeConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
+    public PropertyConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
         this.util = util;
         this.typeNameCreator = new TypeExpressionNameCreator(converteds);
     }
@@ -40,7 +40,7 @@ public class AttributeConverter implements FeatureConverter {
     @Override
     public INamedElement convert(Element element,IClass astahClass) throws InvalidEditingException {
         if ((element instanceof Property) == false) {
-            throw new IllegalArgumentException(format("", element));
+            throw new IllegalArgumentException(format("The element must be Property.", element));
         }
         Property prop = (Property) element;
         if (prop.getAssociation() != null) return null;

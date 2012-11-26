@@ -21,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
-import com.change_vision.astah.xmi.internal.convert.relationship.TemplateBindingConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -66,7 +65,7 @@ public class TemplateBindingConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new TemplateBindingConverter(converteds, util);
+        converter = new TemplateBindingConverter(util);
     }
     
     @Test
@@ -97,7 +96,7 @@ public class TemplateBindingConverterTest {
         ITemplateBinding created = mock(ITemplateBinding.class);
         when(basicModelEditor.createTemplateBinding(sourceClassifierConvertedElement, targetClassifierConvertedElement)).thenReturn(created);
         
-        IElement element = converter.convert(binding);
+        IElement element = converter.convert(converteds, binding);
         assertThat(element,is(notNullValue()));
     }
 

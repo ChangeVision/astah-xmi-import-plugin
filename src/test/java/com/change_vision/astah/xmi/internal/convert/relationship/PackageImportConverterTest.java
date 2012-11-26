@@ -20,7 +20,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
-import com.change_vision.astah.xmi.internal.convert.relationship.PackageImportConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IDependency;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -61,7 +60,7 @@ public class PackageImportConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new PackageImportConverter(converteds,util);
+        converter = new PackageImportConverter(util);
     }
     
     @Test
@@ -90,7 +89,7 @@ public class PackageImportConverterTest {
         PackageImport rel = mock(PackageImport.class);
         when(rel.getImportedPackage()).thenReturn(sourcePackage);
         when(rel.getImportingNamespace()).thenReturn(targetPackage);
-        IElement element = converter.convert(rel);
+        IElement element = converter.convert(converteds, rel);
         assertThat(element,is(notNullValue()));        
     }
 

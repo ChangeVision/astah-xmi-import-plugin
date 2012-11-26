@@ -3,9 +3,6 @@ package com.change_vision.astah.xmi.internal.convert;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import org.eclipse.uml2.uml.Element;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.convert.relationship.RelationshipConverter;
@@ -17,22 +14,21 @@ import com.change_vision.astah.xmi.internal.convert.relationship.PackageImportCo
 import com.change_vision.astah.xmi.internal.convert.relationship.PackageMergeConverter;
 import com.change_vision.astah.xmi.internal.convert.relationship.RealizationConverter;
 import com.change_vision.astah.xmi.internal.convert.relationship.UsageConverter;
-import com.change_vision.jude.api.inf.model.IElement;
 
 public class RelationshipConverters {
     
     private List<RelationshipConverter> converters = new ArrayList<RelationshipConverter>();
     
-    public RelationshipConverters(Map<Element, IElement> converteds, AstahAPIUtil util){
-        this.converters.add(new GeneralizationConverter(converteds, util));
-        this.converters.add(new UsageConverter(converteds, util));
-        this.converters.add(new RealizationConverter(converteds, util));
-        this.converters.add(new DependencyConverter(converteds, util));
-        this.converters.add(new AssociationClassConverter(converteds, util));
-        this.converters.add(new AssociationConverter(converteds,util));
-        this.converters.add(new PackageImportConverter(converteds, util));
-        this.converters.add(new PackageMergeConverter(converteds, util));
-//        this.converters.add(new TemplateBindingConverter(converteds, util));
+    RelationshipConverters(AstahAPIUtil util){
+        this.converters.add(new GeneralizationConverter(util));
+        this.converters.add(new UsageConverter(util));
+        this.converters.add(new RealizationConverter(util));
+        this.converters.add(new DependencyConverter(util));
+        this.converters.add(new AssociationClassConverter(util));
+        this.converters.add(new AssociationConverter(util));
+        this.converters.add(new PackageImportConverter(util));
+        this.converters.add(new PackageMergeConverter(util));
+//        this.converters.add(new TemplateBindingConverter(util));
     }
     
     void addConverter(RelationshipConverter converter){

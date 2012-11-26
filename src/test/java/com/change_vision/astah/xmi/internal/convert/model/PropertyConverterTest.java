@@ -20,14 +20,14 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
-import com.change_vision.astah.xmi.internal.convert.model.AttributeConverter;
+import com.change_vision.astah.xmi.internal.convert.model.PropertyConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
 import com.change_vision.jude.api.inf.model.INamedElement;
 
-public class AttributeConverterTest {
+public class PropertyConverterTest {
     
     @Mock
     private AstahAPIUtil util;
@@ -40,14 +40,14 @@ public class AttributeConverterTest {
 
     private Map<Element, IElement> converteds;
 
-    private AttributeConverter converter;
+    private PropertyConverter converter;
 
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         this.converteds = new HashMap<Element, IElement>();
-        converter = new AttributeConverter(converteds, util);
+        converter = new PropertyConverter(converteds, util);
     }
 
     @Test
@@ -71,9 +71,7 @@ public class AttributeConverterTest {
         
         IClass clazz = mock(IClass.class);
         converteds.put(classifier,clazz);
-        IClass dummyClazz = mock(IClass.class);
-        when(dummyClazz.getName()).thenReturn("dummy");
-        when(dummyClazz.getFullName("::")).thenReturn("dummy");
+        IClass dummyClazz = createDummyClass();
         converteds.put(dummy,dummyClazz);
         
         IAttribute attribute = mock(IAttribute.class);
@@ -99,9 +97,7 @@ public class AttributeConverterTest {
         };
         when(clazz.getAttributes()).thenReturn(attributes);
         converteds.put(classifier,clazz);
-        IClass dummyClazz = mock(IClass.class);
-        when(dummyClazz.getName()).thenReturn("dummy");
-        when(dummyClazz.getFullName("::")).thenReturn("dummy");
+        IClass dummyClazz = createDummyClass();
         converteds.put(dummy,dummyClazz);
         
         IAttribute attribute = mock(IAttribute.class);
@@ -111,6 +107,13 @@ public class AttributeConverterTest {
         
         verify(basicModelEditor).createAttribute(clazz, "attr0", "int");
         verify(attribute).setQualifiedTypeExpression("dummy");        
+    }
+
+    private IClass createDummyClass() {
+        IClass dummyClazz = mock(IClass.class);
+        when(dummyClazz.getName()).thenReturn("dummy");
+        when(dummyClazz.getFullName("::")).thenReturn("dummy");
+        return dummyClazz;
     }
 
 }

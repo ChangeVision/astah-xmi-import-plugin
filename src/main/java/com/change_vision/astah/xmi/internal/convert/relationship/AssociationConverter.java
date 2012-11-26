@@ -22,11 +22,9 @@ import com.change_vision.jude.api.inf.model.IElement;
 
 public class AssociationConverter implements RelationshipConverter {
 
-    private Map<Element, IElement> converteds;
     private AstahAPIUtil util;
 
-    public AssociationConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public AssociationConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -38,16 +36,16 @@ public class AssociationConverter implements RelationshipConverter {
     }
     
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if (accepts(relationship) == false) {
             throw new IllegalArgumentException(format("target relathionship isn't accepted.",relationship));
         }
         Association association = (Association) relationship;
         Property sourceProperty = getSourceProperty(association);
-        IClass source = getSource(sourceProperty);
+        IClass source = getSource(converteds, sourceProperty);
         if (source == null) return null;
         Property targetProperty = getTargetProperty(association);
-        IClass target = getTarget(targetProperty);
+        IClass target = getTarget(converteds, targetProperty);
         if (target == null) return null;
         IAssociation result = getBasicModelEditor().createAssociation(source, target, getName(association),getName(sourceProperty),getName(targetProperty));
         IAttribute[] memberEnds = result.getMemberEnds();
@@ -66,7 +64,7 @@ public class AssociationConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private IClass getSource(Property property) {
+    private IClass getSource(Map<Element, IElement> converteds,Property property) {
         Type sourceElement = property.getType();
         IElement source = converteds.get(sourceElement);
         if (source instanceof IClass) {
@@ -80,7 +78,7 @@ public class AssociationConverter implements RelationshipConverter {
         return sourceProperty;
     }
 
-    private IClass getTarget(Property targetProperty) {
+    private IClass getTarget(Map<Element, IElement> converteds, Property targetProperty) {
         Type targetElement = targetProperty.getType();
         IElement target = converteds.get(targetElement);
         if (target instanceof IClass) {

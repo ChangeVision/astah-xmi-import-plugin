@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.Deployment;
 import org.eclipse.uml2.uml.Element;
@@ -19,11 +20,9 @@ import com.change_vision.jude.api.inf.model.INamedElement;
 
 public class DependencyConverter implements RelationshipConverter {
 
-    private Map<Element, IElement> converteds;
     private AstahAPIUtil util;
 
-    public DependencyConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public DependencyConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -35,14 +34,14 @@ public class DependencyConverter implements RelationshipConverter {
     }
     
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if ((relationship instanceof Dependency) == false) {
             throw new IllegalArgumentException(format("target relathionship isn't Dependency",relationship));
         }
         Dependency dependency = (Dependency) relationship;
-        INamedElement supplier = getSupplier(dependency);
+        INamedElement supplier = getSupplier(converteds, dependency);
         if (supplier == null) return null;
-        INamedElement client = getClient(dependency);
+        INamedElement client = getClient(converteds, dependency);
         if (client == null) return null;
         return getBasicModelEditor().createDependency(supplier, client, getName(dependency));
     }
@@ -57,8 +56,10 @@ public class DependencyConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private INamedElement getSupplier(Dependency dependency) {
-        NamedElement sourceElement = dependency.getSuppliers().get(0);
+    private INamedElement getSupplier(Map<Element, IElement> converteds, Dependency dependency) {
+        EList<NamedElement> suppliers = dependency.getSuppliers();
+        if( suppliers == null || suppliers.size() == 0) return null;
+        NamedElement sourceElement = suppliers.get(0);
         IElement source = converteds.get(sourceElement);
         if (source instanceof INamedElement) {
             return (INamedElement) source;
@@ -66,8 +67,10 @@ public class DependencyConverter implements RelationshipConverter {
         return null;
     }
 
-    private INamedElement getClient(Dependency dependency) {
-        NamedElement targetElement = dependency.getClients().get(0);
+    private INamedElement getClient(Map<Element, IElement> converteds, Dependency dependency) {
+        EList<NamedElement> clients = dependency.getClients();
+        if( clients == null || clients.size() == 0) return null;
+        NamedElement targetElement = clients.get(0);
         IElement target = converteds.get(targetElement);
         if (target instanceof INamedElement) {
             return (INamedElement) target;

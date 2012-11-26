@@ -19,10 +19,8 @@ import com.change_vision.jude.api.inf.model.IElement;
 public class RealizationConverter implements RelationshipConverter {
 
     private AstahAPIUtil util;
-    private Map<Element, IElement> converteds;
 
-    public RealizationConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public RealizationConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -32,14 +30,14 @@ public class RealizationConverter implements RelationshipConverter {
     }
     
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if ((relationship instanceof Realization) == false) {
             throw new IllegalArgumentException(format("target relathionship isn't Realization",relationship));
         }
         Realization realization = (Realization) relationship;
-        IClass supplier = getSupplier(realization);
+        IClass supplier = getSupplier(converteds, realization);
         if (supplier == null) return null;
-        IClass client = getClient(realization);
+        IClass client = getClient(converteds, realization);
         if (client == null) return null;
         return getBasicModelEditor().createRealization(client, supplier, getName(realization));
     }
@@ -54,7 +52,7 @@ public class RealizationConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private IClass getSupplier(Realization realization) {
+    private IClass getSupplier(Map<Element, IElement> converteds, Realization realization) {
         NamedElement sourceElement = realization.getSuppliers().get(0);
         IElement source = converteds.get(sourceElement);
         if (source instanceof IClass) {
@@ -63,7 +61,7 @@ public class RealizationConverter implements RelationshipConverter {
         return null;
     }
 
-    private IClass getClient(Realization realization) {
+    private IClass getClient(Map<Element, IElement> converteds, Realization realization) {
         NamedElement targetElement = realization.getClients().get(0);
         IElement target = converteds.get(targetElement);
         if (target instanceof IClass) {

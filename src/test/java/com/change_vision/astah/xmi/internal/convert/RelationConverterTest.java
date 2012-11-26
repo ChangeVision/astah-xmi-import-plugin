@@ -99,8 +99,8 @@ public class RelationConverterTest {
 
     @Test
     public void notConvertWithNull() throws InvalidEditingException {
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(null);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, null);
         assertThat(element,is(nullValue()));
     }
     
@@ -113,8 +113,8 @@ public class RelationConverterTest {
         assertThat(UMLUtil.getSource(generalization),is(notNullValue()));
         assertThat(UMLUtil.getTarget(generalization),is(nullValue()));
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(generalization);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, generalization);
         assertThat(element,is(nullValue()));
     }
     
@@ -127,8 +127,8 @@ public class RelationConverterTest {
         assertThat(UMLUtil.getSource(generalization),is(nullValue()));
         assertThat(UMLUtil.getTarget(generalization),is(notNullValue()));
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(generalization);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, generalization);
         assertThat(element,is(nullValue()));
     }
     
@@ -143,8 +143,8 @@ public class RelationConverterTest {
         IGeneralization created = mock(IGeneralization.class);
         when(basicModelEditor.createGeneralization(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(generalization);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, generalization);
         assertThat(element,is(notNullValue()));
     }
 
@@ -163,8 +163,8 @@ public class RelationConverterTest {
         IRealization created = mock(IRealization.class);
         when(basicModelEditor.createRealization(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(realization);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, realization);
         assertThat(element,is(notNullValue()));
     }
     
@@ -184,8 +184,8 @@ public class RelationConverterTest {
         IUsage created = mock(IUsage.class);
         when(basicModelEditor.createUsage(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(usage);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, usage);
         assertThat(element,is(notNullValue()));
     }
     
@@ -225,10 +225,10 @@ public class RelationConverterTest {
         when(created.getMemberEnds()).thenReturn(attributes );
         when(basicModelEditor.createAssociation(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
+        RelationConverter converter = new RelationConverter(util);
         assertThat(converteds.containsValue(sourceAttribute),is(false));
         assertThat(converteds.containsValue(targetAttribute),is(false));
-        INamedElement element = converter.convert(association);
+        INamedElement element = converter.convert(converteds, association);
         assertThat(element,is(notNullValue()));
         assertThat(converteds.containsValue(sourceAttribute),is(true));
         assertThat(converteds.containsValue(targetAttribute),is(true));
@@ -270,12 +270,12 @@ public class RelationConverterTest {
         when(created.getMemberEnds()).thenReturn(attributes );
         when(basicModelEditor.createAssociationClass(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
+        RelationConverter converter = new RelationConverter(util);
 
         assertThat(converteds.containsValue(sourceAttribute),is(false));
         assertThat(converteds.containsValue(targetAttribute),is(false));
         
-        INamedElement element = converter.convert(association);
+        INamedElement element = converter.convert(converteds, association);
         
         assertThat(element,is(notNullValue()));
         assertThat(converteds.containsValue(sourceAttribute),is(true));
@@ -290,11 +290,11 @@ public class RelationConverterTest {
         IDependency created = mock(IDependency.class);
         when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq(""))).thenReturn(created );
 
-        RelationConverter converter = new RelationConverter(converteds, util);
+        RelationConverter converter = new RelationConverter(util);
         PackageImport rel = mock(PackageImport.class);
         when(rel.getImportedPackage()).thenReturn(sourcePackage);
         when(rel.getImportingNamespace()).thenReturn(targetPackage);
-        INamedElement element = converter.convert(rel);
+        INamedElement element = converter.convert(converteds, rel);
         assertThat(element,is(notNullValue()));        
     }
     
@@ -306,11 +306,11 @@ public class RelationConverterTest {
         IDependency created = mock(IDependency.class);
         when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq(""))).thenReturn(created );
 
-        RelationConverter converter = new RelationConverter(converteds, util);
+        RelationConverter converter = new RelationConverter(util);
         PackageMerge rel = mock(PackageMerge.class);
         when(rel.getMergedPackage()).thenReturn(sourcePackage);
         when(rel.getReceivingPackage()).thenReturn(targetPackage);
-        INamedElement element = converter.convert(rel);
+        INamedElement element = converter.convert(converteds, rel);
         assertThat(element,is(notNullValue()));        
     }
     
@@ -325,17 +325,19 @@ public class RelationConverterTest {
 
         EList<NamedElement> clients = mock(EList.class);
         when(clients.get(0)).thenReturn(targetPackage);
+        when(clients.size()).thenReturn(1);
         when(dependency.getClients()).thenReturn(clients);
         
         EList<NamedElement> suppliers = mock(EList.class);
         when(suppliers.get(0)).thenReturn(sourcePackage);
+        when(suppliers.size()).thenReturn(1);
         when(dependency.getSuppliers()).thenReturn(suppliers);
 
         IDependency created = mock(IDependency.class);
         when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq("dependency"))).thenReturn(created );
 
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(dependency);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, dependency);
         assertThat(element,is(notNullValue()));        
     }
     
@@ -353,8 +355,8 @@ public class RelationConverterTest {
         ITemplateBinding created = mock(ITemplateBinding.class);
         when(basicModelEditor.createTemplateBinding(sourceClassifierConvertedElement, targetClassifierConvertedElement)).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(binding);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, binding);
         assertThat(element,is(notNullValue()));
     }
 
@@ -379,11 +381,9 @@ public class RelationConverterTest {
         IDependency created = mock(IDependency.class);
         when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), eq(""))).thenReturn(created);
 
-        RelationConverter converter = new RelationConverter(converteds, util);
-        INamedElement element = converter.convert(flow);
+        RelationConverter converter = new RelationConverter(util);
+        INamedElement element = converter.convert(converteds, flow);
         assertThat(element,is(nullValue()));
-        
-        
     }
 
 }

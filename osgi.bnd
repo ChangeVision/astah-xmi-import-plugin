@@ -2,4 +2,4 @@
 # Use this file to add customized Bnd instructions for the bundle
 #-----------------------------------------------------------------
 
-Import-Package: *;resolution:=optional
+Import-Package: !com.change_vision.astah.xmi.convert.relationship,*;resolution:=optional

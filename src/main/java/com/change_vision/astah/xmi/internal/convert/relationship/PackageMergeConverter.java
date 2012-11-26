@@ -18,11 +18,9 @@ import com.change_vision.jude.api.inf.model.INamedElement;
 
 public class PackageMergeConverter implements RelationshipConverter {
 
-    private Map<Element, IElement> converteds;
     private AstahAPIUtil util;
 
-    public PackageMergeConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public PackageMergeConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -32,14 +30,14 @@ public class PackageMergeConverter implements RelationshipConverter {
     }
     
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if ((relationship instanceof PackageMerge) == false) {
             throw new IllegalArgumentException(format("target relathionship isn't PackageImport",relationship));
         }
         PackageMerge packageImport = (PackageMerge) relationship;
-        INamedElement source = getSource(packageImport);
+        INamedElement source = getSource(converteds, packageImport);
         if (source == null) return null;
-        INamedElement target = getTarget(packageImport);
+        INamedElement target = getTarget(converteds, packageImport);
         if (target == null) return null;
         return getBasicModelEditor().createDependency(source, target, "");
     }
@@ -48,7 +46,7 @@ public class PackageMergeConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private INamedElement getSource(PackageMerge dependency) {
+    private INamedElement getSource(Map<Element, IElement> converteds, PackageMerge dependency) {
         NamedElement sourceElement = dependency.getMergedPackage();
         IElement source = converteds.get(sourceElement);
         if (source instanceof INamedElement) {
@@ -57,7 +55,7 @@ public class PackageMergeConverter implements RelationshipConverter {
         return null;
     }
 
-    private INamedElement getTarget(PackageMerge dependency) {
+    private INamedElement getTarget(Map<Element, IElement> converteds, PackageMerge dependency) {
         NamedElement targetElement = dependency.getReceivingPackage();
         IElement target = converteds.get(targetElement);
         if (target instanceof INamedElement) {

@@ -20,10 +20,8 @@ import com.change_vision.jude.api.inf.model.INamedElement;
 public class UsageConverter implements RelationshipConverter {
 
     private AstahAPIUtil util;
-    private Map<Element, IElement> converteds;
 
-    public UsageConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public UsageConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -33,14 +31,14 @@ public class UsageConverter implements RelationshipConverter {
     }
 
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if ((relationship instanceof Usage) == false) {
             throw new IllegalArgumentException(format("target relathionship isn't Usage",relationship));
         }
         Usage usage = (Usage) relationship;
-        INamedElement supplier = getSupplier(usage);
+        INamedElement supplier = getSupplier(converteds, usage);
         if (supplier == null) return null;
-        INamedElement client = getClient(usage);
+        INamedElement client = getClient(converteds, usage);
         if (client == null) return null;
         if ((supplier instanceof IClass) && (client instanceof IClass)) {
             IClass classSupplier = (IClass) supplier;
@@ -60,7 +58,7 @@ public class UsageConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private INamedElement getSupplier(Usage usage) {
+    private INamedElement getSupplier(Map<Element, IElement> converteds, Usage usage) {
         NamedElement sourceElement = usage.getSuppliers().get(0);
         IElement source = converteds.get(sourceElement);
         if (source instanceof INamedElement) {
@@ -69,7 +67,7 @@ public class UsageConverter implements RelationshipConverter {
         return null;
     }
 
-    private INamedElement getClient(Usage usage) {
+    private INamedElement getClient(Map<Element, IElement> converteds, Usage usage) {
         NamedElement targetElement = usage.getClients().get(0);
         IElement target = converteds.get(targetElement);
         if (target instanceof INamedElement) {

@@ -23,7 +23,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.UMLUtil;
-import com.change_vision.astah.xmi.internal.convert.relationship.RealizationConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -65,7 +64,7 @@ public class RealizationConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new RealizationConverter(converteds,util);
+        converter = new RealizationConverter(util);
     }
     
     @Test
@@ -96,7 +95,7 @@ public class RealizationConverterTest {
         assertThat(UMLUtil.getSource(realization),is(notNullValue()));
         assertThat(UMLUtil.getTarget(realization),is(nullValue()));
         
-        IElement element = converter.convert(realization);
+        IElement element = converter.convert(converteds,realization);
         assertThat(element,is(nullValue()));
     }
     
@@ -115,7 +114,7 @@ public class RealizationConverterTest {
         assertThat(UMLUtil.getSource(realization),is(nullValue()));
         assertThat(UMLUtil.getTarget(realization),is(notNullValue()));
         
-        IElement element = converter.convert(realization);
+        IElement element = converter.convert(converteds, realization);
         assertThat(element,is(nullValue()));
     }
 
@@ -135,7 +134,7 @@ public class RealizationConverterTest {
         IRealization created = mock(IRealization.class);
         when(basicModelEditor.createRealization(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        IElement element = converter.convert(realization);
+        IElement element = converter.convert(converteds, realization);
         assertThat(element,is(notNullValue()));
     }
 

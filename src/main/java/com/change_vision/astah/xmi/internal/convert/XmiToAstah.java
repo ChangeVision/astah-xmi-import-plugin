@@ -147,8 +147,8 @@ public class XmiToAstah {
 
 	private INamedElement convertRelationship(Relationship rel)
 			throws InvalidEditingException, ClassNotFoundException {
-	    RelationConverter converter = new RelationConverter(converteds, apiUtil);
-	    return converter.convert(rel);
+	    RelationConverter converter = new RelationConverter(apiUtil);
+	    return converter.convert(converteds, rel);
 	}
 
 	private void convertNormalModel(INamedElement model, Element parent)

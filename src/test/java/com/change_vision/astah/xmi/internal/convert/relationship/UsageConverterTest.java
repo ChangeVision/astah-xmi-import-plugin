@@ -24,7 +24,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.UMLUtil;
-import com.change_vision.astah.xmi.internal.convert.relationship.UsageConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IDependency;
@@ -73,7 +72,7 @@ public class UsageConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new UsageConverter(converteds,util);
+        converter = new UsageConverter(util);
     }
     
     @Test
@@ -104,7 +103,7 @@ public class UsageConverterTest {
         assertThat(UMLUtil.getSource(usege),is(notNullValue()));
         assertThat(UMLUtil.getTarget(usege),is(nullValue()));
         
-        IElement element = converter.convert(usege);
+        IElement element = converter.convert(converteds, usege);
         assertThat(element,is(nullValue()));
     }
     
@@ -123,7 +122,7 @@ public class UsageConverterTest {
         assertThat(UMLUtil.getSource(usege),is(nullValue()));
         assertThat(UMLUtil.getTarget(usege),is(notNullValue()));
         
-        IElement element = converter.convert(usege);
+        IElement element = converter.convert(converteds, usege);
         assertThat(element,is(nullValue()));
     }
 
@@ -143,7 +142,7 @@ public class UsageConverterTest {
         IUsage created = mock(IUsage.class);
         when(basicModelEditor.createUsage(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), anyString())).thenReturn(created);
         
-        IElement element = converter.convert(usage);
+        IElement element = converter.convert(converteds, usage);
         assertThat(element,is(notNullValue()));
     }
 
@@ -163,7 +162,7 @@ public class UsageConverterTest {
         IDependency created = mock(IDependency.class);
         when(basicModelEditor.createDependency(eq(sourcePackageConvertedElement), eq(targetPackageConvertedElement), anyString())).thenReturn(created);
         
-        IElement element = converter.convert(usage);
+        IElement element = converter.convert(converteds, usage);
         assertThat(element,is(notNullValue()));
     }
 

@@ -15,13 +15,13 @@ public class ClassifierModelConverters {
 
     private List<ClassifierConverter> converters = new ArrayList<ClassifierConverter>();
     
-    public ClassifierModelConverters(AstahAPIUtil util, ConvertHelper helper){
+    ClassifierModelConverters(AstahAPIUtil util, ConvertHelper helper){
         this.converters.add(new PackageConverter(util, helper));
         this.converters.add(new ClassConverter(util, helper));
         this.converters.add(new InterfaceConverter(util, helper));
         this.converters.add(new DataTypeConverter(util, helper));
     }
-    
+        
     void addConverter(ClassifierConverter converter){
         this.converters.add(converter);
     }

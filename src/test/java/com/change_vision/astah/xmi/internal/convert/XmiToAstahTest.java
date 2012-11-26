@@ -10,11 +10,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.change_vision.astah.xmi.internal.convert.XmiToAstah;
-import com.change_vision.jude.api.inf.APIAccessorFactory;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
+import com.change_vision.jude.api.inf.project.ProjectAccessorFactory;
 
 public class XmiToAstahTest {
 
@@ -27,8 +26,7 @@ public class XmiToAstahTest {
         XmiToAstah converter = new XmiToAstah(resource.toString());
         File file = folder.newFile("33.asta");
         converter.convert(file.getCanonicalPath());
-        APIAccessorFactory factory = APIAccessorFactory.getAPIAccessorFactory();
-        ProjectAccessor pa = factory.getProjectAccessor();
+        ProjectAccessor pa = ProjectAccessorFactory.getProjectAccessor();
         
         INamedElement[] elements;
         elements = pa.findElements(IClass.class, "Child");

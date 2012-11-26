@@ -28,8 +28,8 @@ public class CommonModelConverter {
     public CommonModelConverter(ConvertHelper helper, Map<Element, IElement> converteds, Map<String, Relationship> relationships,AstahAPIUtil util) {
         this.converteds = converteds;
         this.relationships = relationships;
-        this.modelConverters = new ClassifierModelConverters(util,helper);
-        this.relationshipConverters = new RelationshipConverters(converteds,util);
+        this.modelConverters = ModelConvertersFactory.createClassifierModelConverters(util, helper);
+        this.relationshipConverters = ModelConvertersFactory.createRelationshipConverters(util);
     }
     
     public void convert(INamedElement astahElement, Element parent) throws InvalidEditingException, ClassNotFoundException {
@@ -41,10 +41,10 @@ public class CommonModelConverter {
         }
         for (Element uml2Element : parent.getOwnedElements()) {
             INamedElement newUMLModel = null;
+            boolean converted = false;
             try {
                 if (uml2Element instanceof Relationship){
                     Relationship relationship = (Relationship) uml2Element;
-                    boolean converted = false;
                     for (RelationshipConverter converter : relationshipConverters.getConverters()){
                         if (converter.accepts(relationship)) {
                             rememberRelationship(relationship);
@@ -52,11 +52,7 @@ public class CommonModelConverter {
                             break;
                         }
                     }
-                    if(converted == false) {
-                        notConvertedElement(uml2Element);
-                    }
                 } else {
-                    boolean converted = false;
                     for (ClassifierConverter converter : modelConverters.getConverters()) {
                         if(converter.accepts(uml2Element)){
                             newUMLModel = converter.convert(astahElement, uml2Element);
@@ -65,13 +61,13 @@ public class CommonModelConverter {
                             }
                         }
                     }
-                    if(converted == false) {
-                        notConvertedElement(uml2Element);
-                    }
                 }
             } catch (InvalidEditingException ex) {
                 logger.error("Exception by InvalidEditing", ex);
                 continue;
+            }
+            if(converted == false) {
+                notConvertedElement(uml2Element);
             }
             if (newUMLModel != null) {
                 converteds.put(uml2Element, newUMLModel);

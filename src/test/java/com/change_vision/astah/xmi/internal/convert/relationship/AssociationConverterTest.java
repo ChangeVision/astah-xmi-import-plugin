@@ -26,14 +26,11 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
-import com.change_vision.astah.xmi.internal.convert.RelationConverter;
-import com.change_vision.astah.xmi.internal.convert.relationship.AssociationConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IAssociation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IElement;
-import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 
 public class AssociationConverterTest {
@@ -75,7 +72,7 @@ public class AssociationConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new AssociationConverter(converteds , util);
+        converter = new AssociationConverter(util);
     }
     
     @Test
@@ -138,10 +135,9 @@ public class AssociationConverterTest {
         when(created.getMemberEnds()).thenReturn(attributes );
         when(basicModelEditor.createAssociation(eq(sourceClassifierConvertedElement), eq(targetClassifierConvertedElement), eq("association"), eq("dummySource"), eq("dummyTarget"))).thenReturn(created);
         
-        RelationConverter converter = new RelationConverter(converteds, util);
         assertThat(converteds.containsValue(sourceAttribute),is(false));
         assertThat(converteds.containsValue(targetAttribute),is(false));
-        INamedElement element = converter.convert(association);
+        IElement element = converter.convert(converteds, association);
         assertThat(element,is(notNullValue()));
         assertThat(converteds.containsValue(sourceAttribute),is(true));
         assertThat(converteds.containsValue(targetAttribute),is(true));

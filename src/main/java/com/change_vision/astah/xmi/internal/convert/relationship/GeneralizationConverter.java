@@ -19,10 +19,8 @@ import com.change_vision.jude.api.inf.model.IElement;
 public class GeneralizationConverter implements RelationshipConverter {
 
     private AstahAPIUtil util;
-    private Map<Element, IElement> converteds;
 
-    public GeneralizationConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
+    public GeneralizationConverter(AstahAPIUtil util) {
         this.util = util;
     }
 
@@ -32,14 +30,14 @@ public class GeneralizationConverter implements RelationshipConverter {
     }
     
     @Override
-    public IElement convert(Relationship relationship) throws InvalidEditingException {
+    public IElement convert(Map<Element, IElement> converteds, Relationship relationship) throws InvalidEditingException {
         if ((relationship instanceof Generalization) == false) {
             throw new IllegalArgumentException(format("target relathionship isn't Generalization",relationship));
         }
         Generalization generalization = (Generalization) relationship;
-        IClass source = getSource(generalization);
+        IClass source = getSource(converteds, generalization);
         if (source == null) return null;
-        IClass target = getTarget(generalization);
+        IClass target = getTarget(converteds, generalization);
         if (target == null) return null;
         return getBasicModelEditor().createGeneralization(source, target, "");
     }
@@ -48,7 +46,7 @@ public class GeneralizationConverter implements RelationshipConverter {
         return util.getBasicModelEditor();
     }
 
-    private IClass getSource(Generalization generalization) {
+    private IClass getSource(Map<Element, IElement> converteds, Generalization generalization) {
         Classifier sourceElement = generalization.getSpecific();
         IElement source = converteds.get(sourceElement);
         if (source instanceof IClass) {
@@ -57,7 +55,7 @@ public class GeneralizationConverter implements RelationshipConverter {
         return null;
     }
 
-    private IClass getTarget(Generalization generalization) {
+    private IClass getTarget(Map<Element, IElement> converteds, Generalization generalization) {
         Classifier targetElement = generalization.getGeneral();
         IElement target = converteds.get(targetElement);
         if (target instanceof IClass) {

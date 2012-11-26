@@ -13,18 +13,16 @@ import com.change_vision.jude.api.inf.model.INamedElement;
 
 public class RelationConverter {
 
-    private Map<Element, IElement> converteds;
     private RelationshipConverters converters;
 
-    public RelationConverter(Map<Element, IElement> converteds, AstahAPIUtil util) {
-        this.converteds = converteds;
-        this.converters = new RelationshipConverters(converteds,util);
+    public RelationConverter(AstahAPIUtil util) {
+        this.converters = new RelationshipConverters(util);
     }
     
-    public INamedElement convert(Relationship rel) throws InvalidEditingException{
+    public INamedElement convert(Map<Element, IElement> converteds ,Relationship rel) throws InvalidEditingException{
         for (RelationshipConverter converter : converters.getConverters()) {
             if (converter.accepts(rel)) {
-                IElement converted = converter.convert(rel);
+                IElement converted = converter.convert(converteds, rel);
                 if(converted != null){ 
                     converteds.put(rel, converted);
                     return (INamedElement)converted;                

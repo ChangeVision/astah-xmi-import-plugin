@@ -221,9 +221,9 @@
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<!-- | assume public classes are in the top package, and private classes 
 							are under ".internal" -->
-						<Export-Package>!${bundle.namespace}.internal.*,${bundle.namespace}.*;version="${project.version}"</Export-Package>
+						<Export-Package>!${bundle.namespace}.internal.*,${bundle.namespace}.*;version="${project.version}",org.eclipse.uml2.uml.*;version="3.2.100"</Export-Package>
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
-						<Bundle-Activator>${bundle.namespace}.internal.convert.Activator</Bundle-Activator>
+						<Bundle-Activator>${bundle.namespace}.internal.convert.ModelConvertersFactory</Bundle-Activator>
 						<Astah-Version>${astah.version}</Astah-Version>
 						<Astah-Edition>${astah.edition}</Astah-Edition>
 						<!-- | each module can override these defaults in their osgi.bnd file -->
@@ -276,7 +276,6 @@
 		</extensions>
 	</build>
 	<dependencies>
-		<!-- 
 		<dependency>
 			<groupId>com.change_vision.astah</groupId>
 			<artifactId>astah-api</artifactId>
@@ -290,13 +289,6 @@
 			<version>${astah.version}</version>
 			<scope>system</scope>
 			<systemPath>${astahPath}/astah-pro.jar</systemPath>
-		</dependency>
-		 -->
-		<dependency>
-			<groupId>com.change_vision.astah</groupId>
-			<artifactId>jude</artifactId>
-			<version>6.7-SNAPSHOT</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -400,11 +392,11 @@
 			<optional>true</optional>
 			<scope>test</scope>
 		</dependency>
-    <dependency>
-      <groupId>com.change_vision.astah</groupId>
-      <artifactId>mockito-all-1.8.4</artifactId>
-      <version>1.0</version>
-      <scope>test</scope>
-    </dependency>
+		<dependency>
+			<groupId>com.change_vision.astah</groupId>
+			<artifactId>mockito-all-1.8.4</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

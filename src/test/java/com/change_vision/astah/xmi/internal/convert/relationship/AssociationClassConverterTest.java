@@ -26,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.ConvertHelper;
-import com.change_vision.astah.xmi.internal.convert.relationship.AssociationClassConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IAssociationClass;
 import com.change_vision.jude.api.inf.model.IAttribute;
@@ -72,7 +71,7 @@ public class AssociationClassConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new AssociationClassConverter(converteds, util);
+        converter = new AssociationClassConverter(util);
     }
     
     @Test
@@ -138,7 +137,7 @@ public class AssociationClassConverterTest {
         assertThat(converteds.containsValue(sourceAttribute),is(false));
         assertThat(converteds.containsValue(targetAttribute),is(false));
         
-        IElement element = converter.convert(association);
+        IElement element = converter.convert(converteds,association);
         
         assertThat(element,is(notNullValue()));
         assertThat(converteds.containsValue(sourceAttribute),is(true));

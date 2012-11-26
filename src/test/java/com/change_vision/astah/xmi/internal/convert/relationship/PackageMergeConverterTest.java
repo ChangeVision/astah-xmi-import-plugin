@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
-import com.change_vision.astah.xmi.internal.convert.relationship.PackageMergeConverter;
 import com.change_vision.jude.api.inf.editor.BasicModelEditor;
 import com.change_vision.jude.api.inf.model.IDependency;
 import com.change_vision.jude.api.inf.model.IElement;
@@ -56,7 +55,7 @@ public class PackageMergeConverterTest {
         MockitoAnnotations.initMocks(this);
         when(util.getBasicModelEditor()).thenReturn(basicModelEditor);
         converteds = new HashMap<Element, IElement>();
-        converter = new PackageMergeConverter(converteds, util);
+        converter = new PackageMergeConverter(util);
     }
     
     @Test
@@ -85,7 +84,7 @@ public class PackageMergeConverterTest {
         PackageMerge rel = mock(PackageMerge.class);
         when(rel.getMergedPackage()).thenReturn(sourcePackage);
         when(rel.getReceivingPackage()).thenReturn(targetPackage);
-        IElement element = converter.convert(rel);
+        IElement element = converter.convert(converteds, rel);
         assertThat(element,is(notNullValue()));        
     }
 
