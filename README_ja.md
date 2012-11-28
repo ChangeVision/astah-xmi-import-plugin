@@ -1,7 +1,7 @@
 XMIインポートプラグイン
 ===============================
 
-![dialog](images/XMIインポート.png "XMIインポート")
+![dialog](https://raw.github.com/ChangeVision/astah-xmi-import-plugin/master/images/XMIインポート.png "XMIインポート")
 
 バージョン
 ----------------
