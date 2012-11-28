@@ -14,13 +14,15 @@ Astah http://astah.net
 
 Description
 ----------------
-This plugin provides to load XMI file and import model information at class diagram.
+This plugin enables to load XMI file and import model information of class diagram to Astah.
 
 Notes
 ----------------
- * This plugin supports to load XMI version 2.1
- * The diagrams and presentations aren't supported by this plugin. This plugin only supports to import model information.
- * There are some notation issues if you integrate to other tools.
+ * XMI version 2.1 is supported.
+ * This Plugin loads only model information. Diagram and presentation information aren't currently supported.
+ * Notations may appear differently if you integrate with other tools.
+ * Visibility setting for Association ends aren't supported.
+ * TemplateBinding and TemplateParameter aren't supported.
 
 Limitations
 ----------------
@@ -31,14 +33,14 @@ How to install
 ----------------
  1. Deploy the jar file you downloaded, to the "plugins" folder in the Astah's install folder.
  2. Launch Astah.
- 3. You find the "XMI" under the "Tool".Click "XMI import" under the menu.
+ 3. [XMI] menu has been added under [Tool].
 
 How to use
 ----------------
- 1. Launch Astah, and click "XMI Import" .
+ 1. Launch Astah, and go to [Tool] - [XMI] - [XMI Import].
  2. Select xmi file in the file selection dialog.
  3. Click the "import" button, it starts to import the XMI.
- 4. It will be shown "finish to import the xmi file".
+ 4. It will be shown "Import completed.".
 
 How to uninstall
 ------------------------
@@ -62,7 +64,7 @@ Build & Testing
 Extend this Plugin
 -------------------
 
-This plugin has extension point to import another model type.
+You are able to customize this Plug-in to import other model types.
 
 How to extend
 -----------------
@@ -86,11 +88,13 @@ How to extend
     
 5. Implement converter.
 
-Case1. Classifier model like UseCase, implement ClassifierConverter. ex. com.change_vision.astah.xmi.internal.convert.model's classes
+Case1. Implement ClassifierConverter for Classifier models like UseCase.
+       Please refer to com.change_vision.astah.xmi.internal.convert.model's classes
 
-Case2. Relation model like association、implement RelationConverter. ex. com.change_vision.astah.xmi.internal.convert.relationship's classes.
+Case2. Implement RelationConverter for relationships like association.
+       Please refer to com.change_vision.astah.xmi.internal.convert.relationship's classes.
 
-6. Register your converters to BundleContext. BundleContext is passed by Activator's start/stop. Register like below.
+6. Register your converters to BundleContext. BundleContext is passed by Activator's start/stop. Register as below.
 
 	import org.osgi.framework.BundleActivator;
 	import org.osgi.framework.BundleContext;
