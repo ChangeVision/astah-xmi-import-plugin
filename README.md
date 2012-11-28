@@ -1,7 +1,7 @@
 XMI import plugin
 ===============================
 
-![dialog](images/ImportXMI.png "Import XMI")
+![dialog](https://raw.github.com/ChangeVision/astah-xmi-import-plugin/master/images/ImportXMI.png "Import XMI")
 
 version
 ----------------
