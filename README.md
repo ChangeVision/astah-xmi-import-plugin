@@ -31,6 +31,7 @@ Limitations
 
 How to install
 ----------------
+ 0. [Download the jar file.](https://github.com/ChangeVision/astah-xmi-import-plugin/downloads)
  1. Deploy the jar file you downloaded, to the "plugins" folder in the Astah's install folder.
  2. Launch Astah.
  3. [XMI] menu has been added under [Tool].
