@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.internal.convert.XmiToAstah;
+import com.change_vision.astah.xmi.internal.convert.exception.XMIReadFailedExcetion;
 import com.change_vision.astah.xmi.view.MessageView;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.LicenseNotFoundException;
@@ -48,17 +49,19 @@ public class XmiImporter {
 			converter.convert();
 			
 			MessageView.showMessage(Messages.getMessage("message.import.successfully"));
-
-		} catch (LicenseNotFoundException e) {
-			logger.error(e.getMessage(), e);
-			MessageView.showErrorMessage(null, e.getMessage());
+        } catch (XMIReadFailedExcetion e) {
+            String msg = Messages.getMessage("message.import.error");
+            MessageView.showErrorMessage(null, msg);
+        } catch (LicenseNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            MessageView.showErrorMessage(null, e.getMessage());
 		} catch (ProjectLockedException e) {
 			logger.error(e.getMessage(), e);
 			MessageView.showErrorMessage(null, e.getMessage());
 		} catch(InvalidEditingException e) {
 			logger.error(e.getMessage(), e);
 			MessageView.showErrorMessage(null, e.getMessage());
-		} catch (Throwable e) {
+        } catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			MessageView.showErrorMessage(null, e.getMessage());
 		}

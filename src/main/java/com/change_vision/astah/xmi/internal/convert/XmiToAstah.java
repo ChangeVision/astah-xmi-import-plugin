@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.change_vision.astah.xmi.AstahAPIUtil;
+import com.change_vision.astah.xmi.internal.convert.exception.XMIReadFailedExcetion;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
@@ -57,15 +58,18 @@ public class XmiToAstah {
 	public void convert() throws LicenseNotFoundException,
 			ProjectNotFoundException, IOException, ProjectLockedException,
 			ClassNotFoundException, InvalidEditingException,
-			InvalidUsingException {
+			InvalidUsingException, XMIReadFailedExcetion {
 		convert(null);
 	}
 
 	public void convert(String toPath) throws LicenseNotFoundException,
 			ProjectNotFoundException, IOException, ProjectLockedException,
 			ClassNotFoundException, InvalidEditingException,
-			InvalidUsingException {
+			InvalidUsingException, XMIReadFailedExcetion {
 		Package root = loader.getRoot();
+		if (root == null) {
+		    throw new XMIReadFailedExcetion();
+        }
 		for (Profile p : root.getAppliedProfiles()) {
 			URI uri = EcoreUtil.getURI(p);
 			new XMILoader(uri.toString());
