@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Element;
@@ -71,6 +72,10 @@ public class XmiToAstah {
 		if (toPath != null) {
 			pa.create(toPath);
 		}
+		URI loadRoot = URI.createURI(this.fromPath);
+		URI rootPath = loadRoot.trimSegments(1);
+		String userDir = System.getProperty("user.dir");
+		System.setProperty("user.dir", rootPath.toString());
 		try {
 			TransactionManager.beginTransaction();
 			
@@ -89,6 +94,8 @@ public class XmiToAstah {
 		} catch (Exception e) {
 			TransactionManager.abortTransaction();
 			throw new RuntimeException(e);
+		} finally {
+		      System.setProperty("user.dir", userDir);
 		}
 
 		logger.debug("Convert XMI file {} to astah file {} done.", fromPath, toPath);
