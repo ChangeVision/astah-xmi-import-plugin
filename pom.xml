@@ -47,8 +47,8 @@
       </snapshots>
     </repository>
     <repository>
-      <id>nexus.kompiro.org</id>
-      <url>http://dev.change-vision.com/nexus/content/groups/public/</url>
+      <id>nexus.change-vision.com</id>
+      <url>http://dev.change-vision.com/nexus/content/repositories/shared_release/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -334,7 +334,11 @@
       <artifactId>org.eclipse.emf.common</artifactId>
       <version>2.9.0</version>
     </dependency>
-
+    <dependency>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.mapping.ecore2xml</artifactId>
+            <version>2.7.0.v20140203-1126</version>
+    </dependency>
     <dependency>
       <groupId>com.change_vision.astah</groupId>
       <artifactId>org.eclipse.gmf.runtime.emf.core</artifactId>
