@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Relationship;
 import org.eclipse.uml2.uml.TemplateBinding;
 import org.slf4j.Logger;
@@ -70,10 +67,6 @@ public class XmiToAstah {
 		if (root == null) {
 		    throw new XMIReadFailedExcetion();
         }
-		for (Profile p : root.getAppliedProfiles()) {
-			URI uri = EcoreUtil.getURI(p);
-			new XMILoader(uri.toString());
-		}
 		ProjectAccessor pa = ProjectAccessorFactory.getProjectAccessor();
 		if (toPath != null) {
 			pa.create(toPath);
