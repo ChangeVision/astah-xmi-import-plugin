@@ -1,7 +1,6 @@
 package com.change_vision.astah.xmi.internal.convert;
 
-import java.net.URL;
-import java.util.Map;
+import com.change_vision.astah.xmi.internal.convert.exception.ContentsEmptyException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -13,29 +12,12 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.UMLPackage;
-import org.eclipse.uml2.uml.resource.CMOF202UMLResource;
-import org.eclipse.uml2.uml.resource.CMOF242UMLResource;
-import org.eclipse.uml2.uml.resource.CMOF2UMLExtendedMetaData;
-import org.eclipse.uml2.uml.resource.CMOF2UMLResource;
-import org.eclipse.uml2.uml.resource.UML212UMLExtendedMetaData;
-import org.eclipse.uml2.uml.resource.UML212UMLResource;
-import org.eclipse.uml2.uml.resource.UML22UMLExtendedMetaData;
-import org.eclipse.uml2.uml.resource.UML22UMLResource;
-import org.eclipse.uml2.uml.resource.UML302UMLExtendedMetaData;
-import org.eclipse.uml2.uml.resource.UML302UMLResource;
-import org.eclipse.uml2.uml.resource.UML402UMLExtendedMetaData;
-import org.eclipse.uml2.uml.resource.UML402UMLResource;
 import org.eclipse.uml2.uml.resource.UMLResource;
-import org.eclipse.uml2.uml.resource.XMI212UMLResource;
-import org.eclipse.uml2.uml.resource.XMI222UMLResource;
-import org.eclipse.uml2.uml.resource.XMI242UMLResource;
-import org.eclipse.uml2.uml.resource.XMI2UMLExtendedMetaData;
-import org.eclipse.uml2.uml.resource.XMI2UMLResource;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.change_vision.astah.xmi.internal.convert.exception.ContentsEmptyException;
+import java.net.URL;
 
 public class XMILoader {
 
@@ -59,18 +41,21 @@ public class XMILoader {
 
     private ResourceSet createResourceSet() {
         ResourceSet resourceSet = new ResourceSetImpl();
+        UMLResourcesUtil.init(resourceSet);
+        initUriMap();
         preloadLibraries(resourceSet);
         resourceSet.getLoadOptions().put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
         return resourceSet;
     }
 
+    private void initUriMap() {
+      URI umlResourceURI = URI.createURI("platform:/plugin/org.eclipse.uml2.uml/");
+      URI actualUMLResourceURI = getBaseUMLResourceURI();
+      URIConverter.URI_MAP.put(umlResourceURI, actualUMLResourceURI);
+    }
+
     private void preloadLibraries(ResourceSet resourceSet) {
-        UMLResourcesUtil.init(resourceSet);
-        init(resourceSet);
         URI profileURI = URI.createURI(UMLResource.STANDARD_PROFILE_URI);
-        URIConverter uriConverter = resourceSet.getURIConverter();
-        uriConverter.getURIMap().put(URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/"),
-                getBaseUMLResourceURI().appendFragment("/model/"));
         resourceSet.getResource(profileURI, true);
     }
 
@@ -96,51 +81,6 @@ public class XMILoader {
         }
 
         return result;
-    }
-    private void init(ResourceSet resourceSet) {
-
-        Map<String, Object> contentTypeToFactoryMap = resourceSet.getResourceFactoryRegistry()
-                .getContentTypeToFactoryMap();
-
-        contentTypeToFactoryMap.put(UML402UMLResource.UML_4_0_0_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(UML302UMLResource.UML_3_0_0_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(UML212UMLResource.UML_2_1_0_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(UML212UMLResource.UML_2_0_0_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(UML22UMLResource.UML2_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(XMI2UMLResource.UML_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(XMI242UMLResource.UML_2_4_1_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(XMI242UMLResource.UML_2_4_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(XMI222UMLResource.UML_2_2_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(XMI212UMLResource.UML_2_1_1_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(XMI212UMLResource.UML_2_1_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(CMOF2UMLResource.CMOF_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(CMOF242UMLResource.CMOF_2_4_1_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(CMOF242UMLResource.CMOF_2_4_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-        contentTypeToFactoryMap.put(CMOF202UMLResource.CMOF_2_0_CONTENT_TYPE_IDENTIFIER,
-                UMLResource.Factory.INSTANCE);
-
-        Map<URI, URI> uriMap = resourceSet.getURIConverter().getURIMap();
-
-        uriMap.putAll(UML402UMLExtendedMetaData.getURIMap());
-        uriMap.putAll(UML302UMLExtendedMetaData.getURIMap());
-        uriMap.putAll(UML212UMLExtendedMetaData.getURIMap());
-        uriMap.putAll(UML22UMLExtendedMetaData.getURIMap());
-        uriMap.putAll(XMI2UMLExtendedMetaData.getURIMap());
-        uriMap.putAll(CMOF2UMLExtendedMetaData.getURIMap());
     }
 
     public static String getId(EObject e) {
