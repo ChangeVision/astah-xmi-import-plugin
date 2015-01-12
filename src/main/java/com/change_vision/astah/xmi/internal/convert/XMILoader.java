@@ -60,23 +60,23 @@ public class XMILoader {
     }
 
     private URI getBaseUMLResourceURI() {
-        URI umlMetamodel = URI.createURI(UMLResource.UML_METAMODEL_URI);
-        URL resultURL = UMLResourcesUtil.class.getClassLoader().getResource(
-                String.format("metamodels/%s", umlMetamodel.lastSegment())); //$NON-NLS-1$
+        URI umlEcore = URI.createURI("platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore");
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resultURL = classLoader.getResource(String.format("model/%s", umlEcore.lastSegment()));
 
         URI result;
 
         if (resultURL != null) {
-            // remove the /metamodel/UML.metamodel.uml segments of the resource
+            // remove the /model/UML.ecore segments of the resource
             // we found
             result = URI.createURI(resultURL.toExternalForm(), true).trimSegments(2);
         } else {
             // probably, we're not running with JARs, so assume the source
             // project folder layout
-            resultURL = UMLResourcesUtil.class.getResource("UMLResourcesUtil.class"); //$NON-NLS-1$
+            resultURL = getClass().getResource("XMILoader.class"); 
 
             String baseURL = resultURL.toExternalForm();
-            baseURL = baseURL.substring(0, baseURL.lastIndexOf("/bin/")); //$NON-NLS-1$
+            baseURL = baseURL.substring(0, baseURL.lastIndexOf("/bin/"));
             result = URI.createURI(baseURL, true);
         }
 
