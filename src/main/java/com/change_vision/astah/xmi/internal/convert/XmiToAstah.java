@@ -1,19 +1,5 @@
 package com.change_vision.astah.xmi.internal.convert;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.uml2.uml.AssociationClass;
-import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.Relationship;
-import org.eclipse.uml2.uml.TemplateBinding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.change_vision.astah.xmi.AstahAPIUtil;
 import com.change_vision.astah.xmi.internal.convert.exception.XMIReadFailedExcetion;
 import com.change_vision.jude.api.inf.editor.TransactionManager;
@@ -28,6 +14,30 @@ import com.change_vision.jude.api.inf.model.IModel;
 import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 import com.change_vision.jude.api.inf.project.ProjectAccessorFactory;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.uml2.uml.AssociationClass;
+import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Package;
+import org.eclipse.uml2.uml.Relationship;
+import org.eclipse.uml2.uml.TemplateBinding;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Convert XMI(2.1) to Astah Project.
@@ -74,10 +84,11 @@ public class XmiToAstah {
 		}
 		URI loadRoot = URI.createURI(this.fromPath);
 		URI rootPath = loadRoot.trimSegments(1);
-		String userDir = System.getProperty("user.dir");
-		System.setProperty("user.dir", rootPath.toString());
+		Map<URI, URI> relativeResourceURI = putRelativeResourceURI(rootPath);
+		Map<URI, URI> globalUriMap = URIConverter.URI_MAP;
 		try {
 			TransactionManager.beginTransaction();
+			globalUriMap.putAll(relativeResourceURI);
 			
 			IModel astahModel = pa.getProject();
 			astahModel.setName(root.getName());
@@ -95,13 +106,40 @@ public class XmiToAstah {
 			TransactionManager.abortTransaction();
 			throw new RuntimeException(e);
 		} finally {
-		      System.setProperty("user.dir", userDir);
+		    Set<Entry<URI, URI>> entrySet = relativeResourceURI.entrySet();
+		    for (Entry<URI, URI> entry : entrySet) {
+                URI key = entry.getKey();
+                globalUriMap.remove(key);
+            }
 		}
 
 		logger.debug("Convert XMI file {} to astah file {} done.", fromPath, toPath);
 	}
 
-	private void setElementInformation() throws InvalidEditingException,
+	private Map<URI,URI> putRelativeResourceURI(URI rootPath) {
+        FileSystem fileSystem = FileSystems.getDefault();
+        String basePath = rootPath.path();
+        final Path path = fileSystem.getPath(basePath);
+        final Map<URI, URI> relativeResources = new HashMap<URI, URI>();
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                  Path relativePath = path.relativize(file);
+                  System.out.println(relativePath);
+                  String relativePathValue = relativePath.toString();
+                  URI name = URI.createURI(relativePathValue);
+                  URI toURI = URI.createFileURI(file.toString());
+                  relativeResources.put(name, toURI);
+                  return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+        }
+        return relativeResources;
+  }
+
+  private void setElementInformation() throws InvalidEditingException,
 			ClassNotFoundException {
 		for (Element e : converteds.keySet()) {
 			IElement element = converteds.get(e);
