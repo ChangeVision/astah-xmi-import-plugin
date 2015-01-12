@@ -85,12 +85,12 @@ public class ImportXmiDialog extends JDialog implements ActionListener {
 			chooser.setFileFilter(new FileFilter() {
 				@Override
 				public String getDescription() {
-					return "XMI2.1 Files (.xmi, .uml)";
+					return "XMI2.1 Files (.xmi, .uml, .cmof)";
 				}
 				
 				@Override
 				public boolean accept(File f) {
-					return f.isDirectory() || f.getName().endsWith(".xmi") || f.getName().endsWith(".uml");
+					return f.isDirectory() || f.getName().endsWith(".xmi") || f.getName().endsWith(".uml") || f.getName().endsWith(".cmof");
 				}
 			});
 			if (chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
@@ -102,7 +102,7 @@ public class ImportXmiDialog extends JDialog implements ActionListener {
 			}
 		} else if (cmd.equals("OK")) {
 			String from = fromText.getText();
-			if (!(from.endsWith(".xmi") || from.endsWith(".uml")) || !new File(from).exists()) {
+			if (!(from.endsWith(".xmi") || from.endsWith(".uml") || from.endsWith(".cmof")) || !new File(from).exists()) {
 				MessageView.showErrorMessage(getParent(), Messages.getMessage("warning_message.incorrect_xmi_file"));
 			} else {
 			    Cursor currentCursor = getCursor();
