@@ -3,13 +3,14 @@ XMIインポートプラグイン
 
 ![dialog](https://raw.github.com/ChangeVision/astah-xmi-import-plugin/master/images/XMIインポート.png "XMIインポート")
 
-バージョン
+最新バージョン
 ----------------
-1.0.0
+1.1.0
 
-利用可能なastah
+利用可能なastahバージョン
 ------------------
-astah professional 6.6.4以上
+astah professional 6.7以上
+(astah professional 6.6.4をご利用の方は、[バージョン1.0.0のプラグイン](http://astah.change-vision.com/plugins/xmi/1.0.0.html)をご利用ください)
 
 概要
 ----------------
@@ -23,12 +24,12 @@ astah professional 6.6.4以上
 
 制限事項
 ----------------
- * 関連端の可視性の設定はサポートしません。 (6.6.4)
+ * 関連端の可視性の設定はサポートしません。
  * TemplateBinding,TemplateParameterはサポートしません。
  
 インストール方法
 ----------------
-0. [ここからjarをダウンロードします。](http://astah.change-vision.com/plugins/xmi/1.0.0.html)
+0. [ここからjarをダウンロードします。](http://astah.change-vision.com/plugins/xmi/1.1.0.html)
 1. astahのインストールフォルダ配下のpluginsフォルダに本プラグインのjarファイルを置きます。
 2. astahを起動します。
 3. メニューバーの「ツール」の中に「XMI」と表示されます。その下にある「XMIインポート」を実行してください。
