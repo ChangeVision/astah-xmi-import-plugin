@@ -54,10 +54,16 @@ public class OperationConverter implements FeatureConverter {
         astahOperation.setStatic(op.isStatic());
         astahOperation.setAbstract(op.isAbstract());
         for (Constraint c : op.getPreconditions()) {
-            astahOperation.addPreCondition(c.getName());
+            String condition = c.getName();
+            if (condition != null && !condition.isEmpty()) {
+                astahOperation.addPreCondition(condition);
+            }
         }
         for (Constraint c : op.getPostconditions()) {
-            astahOperation.addPostCondition(c.getName());
+            String condition = c.getName();
+            if (condition != null && !condition.isEmpty()) {
+                astahOperation.addPostCondition(condition);
+            }
         }
         for (Parameter param : op.getOwnedParameters()) {
                 String expression = typeNameCreator.getName(param);
