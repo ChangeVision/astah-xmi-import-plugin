@@ -45,7 +45,9 @@ public class XmiImporter {
 			pa.create();
 			
 			URI uri = new File(from).toURI();
-			XmiToAstah converter = new XmiToAstah(uri.toString());
+			String path = uri.getPath();
+			logger.info("convert the file '{}'",path);
+            XmiToAstah converter = new XmiToAstah(path);
 			converter.convert();
 			
 			MessageView.showMessage(Messages.getMessage("message.import.successfully"));
