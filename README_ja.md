@@ -9,7 +9,7 @@ XMIインポートプラグイン
 
 利用可能なastahバージョン
 ------------------
-astah professional 6.7以上
+[astah professional](http://astah.change-vision.com/ja/product/astah-professional.html) 6.7以上
 
 (astah professional 6.6.4をご利用の方は、[バージョン1.0.0](http://astah.change-vision.com/plugins/xmi/1.0.0.html)をご利用ください)
 
