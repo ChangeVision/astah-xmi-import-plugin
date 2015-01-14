@@ -1,20 +1,10 @@
 package com.change_vision.astah.xmi.internal.convert;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Element;
@@ -84,11 +74,10 @@ public class XmiToAstah {
 		}
 		URI loadRoot = URI.createURI(this.fromPath);
 		URI rootPath = loadRoot.trimSegments(1);
-		Map<URI, URI> relativeResourceURI = putRelativeResourceURI(rootPath);
-		Map<URI, URI> globalUriMap = URIConverter.URI_MAP;
+		String userDir = System.getProperty("user.dir");
+		System.setProperty("user.dir", rootPath.toString());
 		try {
 			TransactionManager.beginTransaction();
-			globalUriMap.putAll(relativeResourceURI);
 			
 			IModel astahModel = pa.getProject();
 			astahModel.setName(root.getName());
@@ -106,38 +95,10 @@ public class XmiToAstah {
 			TransactionManager.abortTransaction();
 			throw new RuntimeException(e);
 		} finally {
-			Set<Entry<URI, URI>> entrySet = relativeResourceURI.entrySet();
-			for (Entry<URI, URI> entry : entrySet) {
-				URI key = entry.getKey();
-				globalUriMap.remove(key);
-			}
+			System.setProperty("user.dir", userDir);
 		}
 
 		logger.debug("Convert XMI file {} to astah file {} done.", fromPath, toPath);
-	}
-
-	private Map<URI,URI> putRelativeResourceURI(URI rootPath) {
-		FileSystem fileSystem = FileSystems.getDefault();
-		String basePath = rootPath.path();
-		final Path path = fileSystem.getPath(basePath);
-		final Map<URI, URI> relativeResources = new HashMap<URI, URI>();
-		try {
-			Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				  Path relativePath = path.relativize(file);
-				  String relativePathValue = relativePath.toString();
-				  URI name = URI.createURI(relativePathValue);
-				  URI toURI = URI.createFileURI(file.toString());
-				  logger.trace("path:{},absolute:{}",relativePath,toURI.toString());
-				  relativeResources.put(name, toURI);
-				  return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			logger.error("Loading error.",e);
-		}
-		return relativeResources;
 	}
 
 	private void setElementInformation() throws InvalidEditingException,
