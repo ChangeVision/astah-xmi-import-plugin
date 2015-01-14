@@ -30,7 +30,7 @@ XMIインポートプラグイン
  
 インストール方法
 ----------------
-0. [ここからjarをダウンロードします。](http://astah.change-vision.com/plugins/xmi/1.1.1.html)
+0. [ここからjarをダウンロードします。](http://cdn.change-vision.com/plugins/xmi-1.1.1.jar)
 1. astahのインストールフォルダ配下のpluginsフォルダに本プラグインのjarファイルを置きます。
 2. astahを起動します。
 3. メニューバーの「ツール」の中に「XMI」と表示されます。その下にある「XMIインポート」を実行してください。
