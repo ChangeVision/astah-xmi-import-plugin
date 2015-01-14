@@ -10,8 +10,8 @@ version
 Available for
 ------------------
 [Astah Professional](http://astah.net/editions/professional) 6.7
+
 If you are using Astah Professional 6.6.4, use [the plug-in version 1.0.0](http://astah.change-vision.com/plugins/xmi/1.0.0.html).
-Astah http://astah.net
 
 Description
 ----------------
