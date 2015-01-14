@@ -5,11 +5,12 @@ XMI import plugin
 
 version
 ----------------
-1.0.0
+1.1.1
 
 Available for
 ------------------
-Astah Professional 6.6.4 or later.
+[Astah Professional](http://astah.net/editions/professional) 6.7
+If you are using Astah Professional 6.6.4, use [the plug-in version 1.0.0](http://astah.change-vision.com/plugins/xmi/1.0.0.html).
 Astah http://astah.net
 
 Description
@@ -18,7 +19,7 @@ This plugin enables to load XMI file and import model information of class diagr
 
 Notes
 ----------------
- * XMI version 2.1 is supported.
+ * XMI version 2.1 and later is supported.
  * This Plugin loads only model information. Diagram and presentation information aren't currently supported.
  * Notations may appear differently if you integrate with other tools.
  * Visibility setting for Association ends aren't supported.
@@ -26,12 +27,12 @@ Notes
 
 Limitations
 ----------------
- * Doesn't support to set attribute visibility. (6.6.4)
+ * Doesn't support to set attribute visibility.
  * Doesn't support to set TemplateBinding and TemplateParameter.
 
 How to install
 ----------------
- 0. [Download the jar file.](https://github.com/ChangeVision/astah-xmi-import-plugin/downloads)
+ 0. [Download the jar file.](http://cdn.change-vision.com/plugins/xmi-1.1.1.jar)
  1. Deploy the jar file you downloaded, to the "plugins" folder in the Astah's install folder.
  2. Launch Astah.
  3. [XMI] menu has been added under [Tool].
