@@ -27,7 +27,7 @@ public class XMILoader {
 
     public XMILoader(String xmiPath) throws ContentsEmptyException {
         ResourceSet resourceSet = createResourceSet();
-        URI uri = URI.createURI(xmiPath);
+        URI uri = URI.createFileURI(xmiPath);
         logger.info("load uri {}",uri);
         this.res = (XMIResource) resourceSet.getResource(uri, true);
         if (this.res.getContents().isEmpty()) {
