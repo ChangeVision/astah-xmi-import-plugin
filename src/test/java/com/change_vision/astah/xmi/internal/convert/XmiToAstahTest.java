@@ -23,7 +23,7 @@ public class XmiToAstahTest {
     @Test
     public void XMIのファイルを読み込めること() throws Exception {
         URL resource = XmiToAstahTest.class.getResource("/33.uml");
-        XmiToAstah converter = new XmiToAstah(resource.toString());
+        XmiToAstah converter = new XmiToAstah(resource.getPath());
         File file = folder.newFile("33.asta");
         converter.convert(file.getCanonicalPath());
         ProjectAccessor pa = ProjectAccessorFactory.getProjectAccessor();

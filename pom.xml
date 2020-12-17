@@ -61,6 +61,11 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+     <repository>
+      <id>dev.change-vision.com-nexus</id>
+      <name>dev.change-vision.com Maven Repository</name>
+      <url>https://repos.change-vision.com/nexus/content/repositories/releases</url>
+    </repository>
     <repository>
       <id>java.net</id>
       <name>java.net Maven Repository</name>
