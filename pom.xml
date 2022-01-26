@@ -287,13 +287,6 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh-external</artifactId>
-        <version>2.2</version>
-      </extension>
-    </extensions>
   </build>
   <dependencies>
     <dependency>
@@ -391,21 +384,21 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.3</version>
+			<version>1.2.9</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.0.3</version>
+			<version>1.2.9</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.6</version>
+			<version>1.7.32</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
