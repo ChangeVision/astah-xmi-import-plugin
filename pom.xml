@@ -64,9 +64,6 @@
      <repository>
       <id>dev.change-vision.com-nexus</id>
       <name>dev.change-vision.com Maven Repository</name>
-      <!--
-      <url>https://repos.change-vision.com/nexus/content/repositories/releases</url>
-       -->
       <url>http://repos.change-vision.com/nexus/content/groups/public/</url>
     </repository>
     <repository>
