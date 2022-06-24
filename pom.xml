@@ -64,7 +64,7 @@
      <repository>
       <id>dev.change-vision.com-nexus</id>
       <name>dev.change-vision.com Maven Repository</name>
-      <url>https://repos.change-vision.com/nexus/content/repositories/releases</url>
+      <url>http://repos.change-vision.com/nexus/content/groups/public/</url>
     </repository>
     <repository>
       <id>java.net</id>
@@ -391,21 +391,21 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.3</version>
+      <version>1.2.9</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.0.3</version>
+      <version>1.2.9</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.6</version>
+      <version>1.7.32</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
